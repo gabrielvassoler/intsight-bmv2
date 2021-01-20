@@ -2,6 +2,7 @@ import json
 import sys
 
 import networkx as nx
+import collections
 
 # 3072 8 4
 
@@ -17,6 +18,113 @@ CTH_DEPTH = int(Q_DEPTH/CTH_DEPTH_FRAC)
 CTH_TIMEDELTA = int((1000000/Q_DEPTH_FRAC)/CTH_DEPTH_FRAC)
 
 STH_BITRATE = int((LBW*1e6*0.5/8)/(1e6/EPOCH_LENGTH))
+
+Rule = collections.namedtuple('Rule', ['source', 'path_len', 'next_node',
+                                        'current_code', 'increment',
+                                        'new_code'])
+
+def get_paths(graph, source):
+    """Computes and returns a sorted list of paths from source according to 
+    network routing 'policies'."""
+    targets = [v for v in sorted(nx.nodes(graph)) if v != source]
+    paths = list()
+    for target in targets:
+        # PICK ONLY ONE OF THE POLICIES BELOW
+        # Policy: All Shortest Paths
+        paths += list(nx.all_shortest_paths(graph, source, target))
+        
+        # # Policy: All Simple Paths
+        # paths += list(nx.all_simple_paths(graph, source, target))
+
+        # # Policy: All Simple Paths with Limited Length
+        # spl = nx.shortest_path_length(graph, source, target)
+        # allowed_stretch = 2 # hops
+        # paths += list(nx.all_simple_paths(graph, source, target,
+        #                                   cutoff=spl + allowed_stretch))
+    
+    return sorted(paths)
+
+def encode(graph, verbose=False):
+    """Generates a unique code for each path in the network with same tuple 
+    (source, destination, length)."""
+    sources = list(nx.nodes(graph))
+
+    rules = list()
+    for _ in range(len(sources)):
+        rules.append(list())
+        
+    path_ID_decoder = {}
+    for source in sources:
+        paths = get_paths(graph, source)
+        prev_path = []
+
+        next_code = list()
+        for _ in range(len(sources)):
+            next_code.append([0]*len(sources))
+
+        print(next_code)
+        for path in paths:
+            if verbose:
+                print('path:', path)
+            parent_node = None
+            level = 0
+            node = path[level]
+            while level < len(prev_path) and prev_path[level] == node:
+                # Same subpath, move along
+                parent_node = int(node[1:]) - 1 
+                level = level + 1
+                node = path[level]
+            
+            while level < len(path):
+                print(len(path))
+                node = int(path[level][1:]) - 1
+                if verbose:
+                    print('node', node)
+                    print('parent_node:', parent_node)
+                # Get code for parent at previous level
+                parent_code = 0
+                if level > 0:
+                    print(parent_node, level)
+                    print(next_code)
+                    parent_code = next_code[parent_node-1][level - 1] - 1
+                if verbose:
+                    print('parent_code:', parent_code, node, level)
+                # Decide code for node at current level
+                node_code = max(parent_code, next_code[node-1][level])
+                if verbose:
+                    print('node_code:', node_code)
+                # Update code
+                next_code[node-1][level] = node_code + 1
+                # If parent and child codes are different, create a rule
+                if node_code != parent_code:
+                    rules[parent_node].append(Rule(
+                        source=source,
+                        path_len=level - 1,
+                        next_node=node,
+                        current_code=parent_code,
+                        increment=node_code - parent_code,
+                        new_code=node_code,
+                    ))
+                    if verbose:
+                        print('create rule!')
+                # Go to next level
+                parent_node = node
+                level = level + 1
+            
+#             path_ID = PathID(path[0], path[-1], len(path), node_code)
+            path_ID = '{},{},{},{}'.format(path[0], path[-1], len(path), node_code)
+            if path_ID in path_ID_decoder:
+                raise Exception('Same ID for different paths.')
+            
+            path_ID_decoder[path_ID] = path
+            prev_path = path
+    
+    for node in range(len(sources)):
+        rules[node] = sorted(rules[node])
+
+    with open('path_ID_decoder.txt', 'w') as f:
+            f.write(str(path_ID_decoder))
+    print(rules, path_ID_decoder)
 
 def main(net_file):
 
@@ -175,6 +283,8 @@ def main(net_file):
     
     shortest_paths = dict(nx.all_pairs_shortest_path(topo))
     
+    encode(topo, True)
+
     # routing
     routing_entries = {}
     for u in nodes.keys():

@@ -1,0 +1,39 @@
+{
+    "capture_traffic": false,
+    "run_workload": true,
+    "workload_file": "workload-e2edelay.json",
+    "nodes": 5,
+    "hosts_per_node": 2,
+    "node_links": [
+        ["s3", "s4"],
+        ["s3", "s2"],
+        ["s4", "s5"],
+        ["s2", "s1"]
+    ],
+    "e2e_delay_slas": {
+        "h1": {
+            "h10": [20000, 1]
+        }
+    },
+    
+    "reachability": [{
+        "startLocation" : 1,
+        "endLocation": 5,
+        "flowID": 3
+    }],
+
+    "waypoint": [{
+        "startLocation": 3,
+        "endLocation": 5,
+        "flowID": 13,
+        "expectedWaypoints": ["s2"],
+        "unexpectedWaypoints": ["s6"]
+    }],
+
+    "equalPathLength": [{
+        "startLocation": 3,
+        "endLocation": 5,
+        "flowID": 13,
+        "pathLength": 3
+    }]
+}
