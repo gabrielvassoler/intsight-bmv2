@@ -35,5 +35,18 @@
         "endLocation": 5,
         "flowID": 13,
         "pathLength": 3
-    }]
+    }],
+
+    "disjointPath":[
+        [{
+            "startLocation": 3,
+            "endLocation": 5,
+            "flowID": 13
+        },
+        {
+            "startLocation": 3,
+            "endLocation": 5,
+            "flowID": 13
+        }]
+    ]
 }

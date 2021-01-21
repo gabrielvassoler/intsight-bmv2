@@ -2,6 +2,14 @@ import json
 
 configs = ''
 PROPERTIES = {}
+multiPathProperties = []
+MPid = 0
+
+class FlowDescription:
+    def __init__(self, startLocation, endLocation, flowID):
+        self.endLocation = endLocation
+        self.flowID = flowID
+        self.startLocation = startLocation
 
 #Each property to be verified will have its own class
 class Reachability:
@@ -30,6 +38,27 @@ class EqualPathLength:
         self.startLocation = startLocation
         self.expectedLength = expectedLength
         self.errorFound = 0
+
+class DisjointPathAux:
+    def __init__(self, startLocation, endLocation, flowID, id):
+        self.flow = FlowDescription(startLocation, endLocation, flowID)
+        self.id = id
+
+class DisjointPath:
+    def __init__(self):
+        self.sets = {}
+        self.errorFound = 0
+
+    def check(self, flow, decoder):
+        path = decoder['s'+str(flow.startLocation)+',s'+str(flow.endLocation)+','+str(abs(flow.endLocation - flow.startLocation)+1)+',0']
+        self.sets[str(flow.startLocation)+','+str(flow.endLocation)+','+str(flow.flowID)].add(path)
+        indexes = list(self.sets).remove(str(flow.startLocation)+','+str(flow.endLocation)+','+str(flow.flowID))
+        for a in indexes:
+            if(self.sets[str(flow.startLocation)+','+str(flow.endLocation)+','+str(flow.flowID)].intersection(self.sets[a]) != set()):
+                self.errorFound = 1
+                return a
+        return ""
+        
 
 
 def main():
@@ -87,6 +116,18 @@ def main():
                             print('flowID = '+str(prop.flowID)+' startL = '+str(prop.startLocation)+' endL = '+str(prop.endLocation))
                             print('EXPECTED MAX LENGTH: ' + str(prop.expectedLength))
                             print('GIVEN LENGTH: '+ str(pathLength))
+
+                #CHECKING FOR DISJOINT PATHS
+                if isinstance(prop, DisjointPathAux):
+                    if pathdst == prop.flow.endLocation and pathsrc == prop.flow.startLocation and flow == prop.flow.flowID:
+                        f = multiPathProperties[prop.id].check(prop.flow, path_id_decoder)
+                        if f != "":
+                            print('\nFOR PROPERTY: DISJOINT PATH.')
+                            print('flowID = '+str(prop.flowID)+' startL = '+str(prop.startLocation)+' endL = '+str(prop.endLocation))
+                            path = path_id_decoder['s'+str(pathsrc)+',s'+str(pathdst)+','+str(abs(pathdst - pathsrc)+1)+',0']
+                            print('PATH: '+ ','.join(str(e) for e in path))
+                            print('FOUND INTERSECTION WITH FLOW: ' + f)
+                            print('PATH: '+ ','.join(str(e) for e in multiPathProperties[prop.id].sets[f]))
     
     for a in PROPERTIES:
         for prop in PROPERTIES[a]:
@@ -150,5 +191,19 @@ if 'equalPathLength' in configs:
         else:
             PROPERTIES[a["endLocation"]] = []
             PROPERTIES[a["endLocation"]].append(EqualPathLength(a["startLocation"], a["endLocation"], a["flowID"], a["pathLength"]))
+
+if 'disjointPath' in configs:
+    r = configs['disjointPath']
+    for a in r:
+        multiPathProperties.append(DisjointPath())
+        for b in a:
+            multiPathProperties[MPid].sets[str(b["startLocation"])+','+str(b["endLocation"])+','+str(b["flowID"])] = {}
+            if(b["endLocation"] in PROPERTIES):
+                PROPERTIES[b["endLocation"]].append(DisjointPathAux(b["startLocation"], b["endLocation"], b["flowID"], MPid))
+            else:
+                PROPERTIES[b["endLocation"]] = []
+                PROPERTIES[b["endLocation"]].append(DisjointPathAux(b["startLocation"], b["endLocation"], b["flowID"], MPid))
+        MPid += 1
+
 
 main()
