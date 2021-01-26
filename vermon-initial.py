@@ -51,8 +51,10 @@ class DisjointPath:
 
     def check(self, flow, decoder):
         path = decoder['s'+str(flow.startLocation)+',s'+str(flow.endLocation)+','+str(abs(flow.endLocation - flow.startLocation)+1)+',0']
-        self.sets[str(flow.startLocation)+','+str(flow.endLocation)+','+str(flow.flowID)].add(path)
-        indexes = list(self.sets).remove(str(flow.startLocation)+','+str(flow.endLocation)+','+str(flow.flowID))
+        self.sets[str(flow.startLocation)+','+str(flow.endLocation)+','+str(flow.flowID)].update(path)
+        aux = dict(self.sets)
+        aux.pop(str(flow.startLocation)+','+str(flow.endLocation)+','+str(flow.flowID))
+        indexes = list(aux)
         for a in indexes:
             if(self.sets[str(flow.startLocation)+','+str(flow.endLocation)+','+str(flow.flowID)].intersection(self.sets[a]) != set()):
                 self.errorFound = 1
@@ -123,11 +125,11 @@ def main():
                         f = multiPathProperties[prop.id].check(prop.flow, path_id_decoder)
                         if f != "":
                             print('\nFOR PROPERTY: DISJOINT PATH.')
-                            print('flowID = '+str(prop.flowID)+' startL = '+str(prop.startLocation)+' endL = '+str(prop.endLocation))
+                            print('flowID = '+str(prop.flow.flowID)+' startL = '+str(prop.flow.startLocation)+' endL = '+str(prop.flow.endLocation))
                             path = path_id_decoder['s'+str(pathsrc)+',s'+str(pathdst)+','+str(abs(pathdst - pathsrc)+1)+',0']
                             print('PATH: '+ ','.join(str(e) for e in path))
                             print('FOUND INTERSECTION WITH FLOW: ' + f)
-                            print('PATH: '+ ','.join(str(e) for e in multiPathProperties[prop.id].sets[f]))
+                            print('PATH: '+ ','.join(str(e) for e in sorted(multiPathProperties[prop.id].sets[f])))
     
     for a in PROPERTIES:
         for prop in PROPERTIES[a]:
@@ -197,7 +199,7 @@ if 'disjointPath' in configs:
     for a in r:
         multiPathProperties.append(DisjointPath())
         for b in a:
-            multiPathProperties[MPid].sets[str(b["startLocation"])+','+str(b["endLocation"])+','+str(b["flowID"])] = {}
+            multiPathProperties[MPid].sets[str(b["startLocation"])+','+str(b["endLocation"])+','+str(b["flowID"])] = set()
             if(b["endLocation"] in PROPERTIES):
                 PROPERTIES[b["endLocation"]].append(DisjointPathAux(b["startLocation"], b["endLocation"], b["flowID"], MPid))
             else:
