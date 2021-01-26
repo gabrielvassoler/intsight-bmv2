@@ -48,5 +48,12 @@
             "endLocation": 5,
             "flowID": 3
         }]
-    ]
+    ],
+
+    "pathPreference": [{
+        "startLocation": 3,
+        "endLocation": 5,
+        "flowID": 13,
+        "expectedPathCode": 0
+    }]
 }
