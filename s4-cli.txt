@@ -1,0 +1,4 @@
+register_write ingress.node_ID 0 4
+mirroring_add 42 3
+set_queue_depth 1125
+set_queue_rate 9000

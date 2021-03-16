@@ -128,7 +128,7 @@ def main():
                             print('flowID = '+str(prop.flow.flowID)+' startL = '+str(prop.flow.startLocation)+' endL = '+str(prop.flow.endLocation))
                             path = path_id_decoder['s'+str(pathsrc)+',s'+str(pathdst)+','+str(abs(pathdst - pathsrc)+1)+',0']
                             print('PATH: '+ ','.join(str(e) for e in path))
-                            print('FOUND INTERSECTION WITH FLOW: ' + f)
+                            print('FOUND INTERSECTION WITH FLOW (Start Location, End Location, Flow ID): ' + f)
                             print('PATH: '+ ','.join(str(e) for e in sorted(multiPathProperties[prop.id].sets[f])))
     
     for a in PROPERTIES:
@@ -136,12 +136,12 @@ def main():
             #FINAL RESULT FOR REACHABILITY
             if isinstance(prop, Reachability):
                 print('\nFOR PROPERTY: REACHABILITY.')
-                print('flowID = '+str(prop.flowID)+' startL = '+str(prop.startLocation)+' endL = '+str(prop.endLocation)+'\n')
+                print('flowID = '+str(prop.flowID)+' startL = '+str(prop.startLocation)+' endL = '+str(prop.endLocation)+'')
                 if prop.lastSeen != 0 :
-                    print('PROPERTY HOLD IN THIS TEST')
                     print('LAST PACKET SEEN ON EPOCH '+str(prop.lastSeen))
                     print('LARGEST TIME BETWEEN PACKETS ON THIS RUN: '+str(prop.largestGap))
                     print('GAP HAPPENED BETWEEN EPOCHS: '+str(prop.gapS)+' - '+str(prop.gapF))
+                    print('PROPERTY HOLD IN THIS TEST')
                 else:
                     print('PROPERTY DID NOT HOLD IN THIS TEST')
             
@@ -149,6 +149,7 @@ def main():
                 print('\nFOR PROPERTY: WAYPOINT.')
                 print('flowID = '+str(prop.flowID)+' startL = '+str(prop.startLocation)+' endL = '+str(prop.endLocation))
                 print('EXPECTED WAYPOINTS: ' + ','.join(str(e) for e in prop.expectedWaypoints))
+                print('UNEXPECTED WAYPOINTS: ' + ','.join(str(e) for e in prop.unexpectedWaypoints))
                 if prop.errorFound == 0 :
                     print('PROPERTY HOLD IN THIS TEST')
                 else:

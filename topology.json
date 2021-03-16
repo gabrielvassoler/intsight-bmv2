@@ -1,0 +1,158 @@
+{
+    "switches": {
+        "s3": {
+            "runtime_json": "s3-runtime.json",
+            "cli_input": "s3-cli.txt"
+        },
+        "s4": {
+            "runtime_json": "s4-runtime.json",
+            "cli_input": "s4-cli.txt"
+        },
+        "s1": {
+            "runtime_json": "s1-runtime.json",
+            "cli_input": "s1-cli.txt"
+        },
+        "s2": {
+            "runtime_json": "s2-runtime.json",
+            "cli_input": "s2-cli.txt"
+        },
+        "s0": {
+            "runtime_json": "s0-runtime.json"
+        },
+        "s5": {
+            "runtime_json": "s5-runtime.json",
+            "cli_input": "s5-cli.txt"
+        }
+    },
+    "capture_traffic": false,
+    "hosts": [
+        "h4",
+        "h6",
+        "h9",
+        "h2",
+        "h8",
+        "h1",
+        "h10",
+        "h7",
+        "h5",
+        "h3"
+    ],
+    "links": [
+        [
+            "h1",
+            "s1",
+            "0us",
+            100
+        ],
+        [
+            "h2",
+            "s1",
+            "0us",
+            100
+        ],
+        [
+            "h3",
+            "s2",
+            "0us",
+            100
+        ],
+        [
+            "h4",
+            "s2",
+            "0us",
+            100
+        ],
+        [
+            "h5",
+            "s3",
+            "0us",
+            100
+        ],
+        [
+            "h6",
+            "s3",
+            "0us",
+            100
+        ],
+        [
+            "h7",
+            "s4",
+            "0us",
+            100
+        ],
+        [
+            "h8",
+            "s4",
+            "0us",
+            100
+        ],
+        [
+            "h9",
+            "s5",
+            "0us",
+            100
+        ],
+        [
+            "h10",
+            "s5",
+            "0us",
+            100
+        ],
+        [
+            "s0",
+            "s1",
+            "0us",
+            100
+        ],
+        [
+            "s0",
+            "s2",
+            "0us",
+            100
+        ],
+        [
+            "s0",
+            "s3",
+            "0us",
+            100
+        ],
+        [
+            "s0",
+            "s4",
+            "0us",
+            100
+        ],
+        [
+            "s0",
+            "s5",
+            "0us",
+            100
+        ],
+        [
+            "s1",
+            "s2",
+            "0us",
+            100
+        ],
+        [
+            "s2",
+            "s3",
+            "0us",
+            100
+        ],
+        [
+            "s3",
+            "s4",
+            "0us",
+            100
+        ],
+        [
+            "s4",
+            "s5",
+            "0us",
+            100
+        ]
+    ],
+    "run_workload": true,
+    "workload_file": "experiments/e2edelay/workload.json"
+}

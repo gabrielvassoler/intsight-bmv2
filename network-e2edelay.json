@@ -26,8 +26,8 @@
         "startLocation": 3,
         "endLocation": 5,
         "flowID": 13,
-        "expectedWaypoints": ["s2"],
-        "unexpectedWaypoints": ["s6"]
+        "expectedWaypoints": ["s3"],
+        "unexpectedWaypoints": ["s4"]
     }],
 
     "equalPathLength": [{

@@ -85,12 +85,45 @@ class IntSight_Report(Packet):
             )
         return out
 
+class Loop_Report(Packet):
+    name = "Loop_Report"
+    fields_desc = [
+        IntField("epoch", 0),
+        IntField("flow_ID", 0),
+        BitField("path_src", 0,  10),
+        BitField("path_length", 0,  6),
+        ShortField("path_code", 0),
+        BitField("node_ID", 0, 8),
+        BitField("bloom_filter", 0, 64),
+    ]
+
+    def __repr__(self):
+        out = ''
+        # out += '[{:4d}:{:2d}] '.format(self.epoch, self.egress_epoch, self.flow_ID)
+        out += '[{:4d}:{:2d}] '.format(self.epoch, self.flow_ID)
+        fmt = '{{:0{}b}}'.format(self.path_length)
+        out += '({:1d} => {:d}, p={:d}, len={:d}, bloom={}) '.format(
+            self.path_src, self.node_ID, self.path_code, self.path_length, self.bloom_filter
+        )
+        return out
+    
+    def csv(self):
+        out = ''
+        # out += '{:d},{:d},{:d},'.format(self.epoch, self.egress_epoch, self.flow_ID)
+        out += '{:d},{:d},'.format(self.epoch, self.flow_ID)
+        fmt = '{{:0{}b}}'.format(self.path_length)
+        out += '{:d},{:d},{:d},{:d},{}'.format(
+            self.path_src, self.node_ID, self.path_code, self.path_length, self.bloom_filter
+        )
+        return out
+
 
 class PacketSniffer(threading.Thread):
     def __init__(self, interface):
         threading.Thread.__init__(self)
         self.interface = interface
         self.log_filename = 'logs/{}-reports'.format(interface.split('-')[0])
+        self.log_loop_filename = 'logs/{}-loop-reports'.format(interface.split('-')[0])
         with open(self.log_filename + '.txt', 'w') as f:
             f.write('# IntSight report packet log for interface {}.\n' \
                     .format(self.interface))
@@ -105,6 +138,11 @@ class PacketSniffer(threading.Thread):
                 f.write('{}\n'.format(repr(pkt[IntSight_Report])))
             with open(self.log_filename + '.csv', 'a') as f:
                 f.write('{}\n'.format(pkt[IntSight_Report].csv()))
+        if Loop_Report in pkt:
+            with open(self.log_loop_filename + '.txt', 'a') as f:
+                f.write('{}\n'.format(repr(pkt[Loop_Report])))
+            with open(self.log_loop_filename + '.csv', 'a') as f:
+                f.write('{}\n'.format(pkt[Loop_Report].csv()))
 
     def run(self):
         sys.stdout.flush()
@@ -114,6 +152,7 @@ class PacketSniffer(threading.Thread):
 
 def main(n_nodes=5, username=None):
     bind_layers(IP, IntSight_Report, proto=224)
+    bind_layers(IP, Loop_Report, proto=225)
     
     print('Creating sniffer threads.')
     sniffers = []
