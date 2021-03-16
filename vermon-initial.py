@@ -60,7 +60,13 @@ class DisjointPath:
                 self.errorFound = 1
                 return a
         return ""
-        
+
+class PathPreference:
+    def __init__(self, startLocation, endLocation, flowID, id):
+        self.flow = FlowDescription(startLocation, endLocation, flowID)
+        self.expectedPath = id
+        self.receivedCodes = set()
+        self.errorFound = 0
 
 
 def main():
@@ -73,6 +79,7 @@ def main():
     for x in n:
         b = x.split(',')
         pathLength = int(b[6])
+        pathID = int(b[5])
         pathdst = int(b[4])
         pathsrc = int(b[3])
         flow = int(b[2])
@@ -130,7 +137,18 @@ def main():
                             print('PATH: '+ ','.join(str(e) for e in path))
                             print('FOUND INTERSECTION WITH FLOW (Start Location, End Location, Flow ID): ' + f)
                             print('PATH: '+ ','.join(str(e) for e in sorted(multiPathProperties[prop.id].sets[f])))
-    
+
+                #CHECKING FOR PATH PREFERENCE 
+                if isinstance(prop, PathPreference):
+                    if pathdst == prop.flow.endLocation and pathsrc == prop.flow.startLocation and flow == prop.flow.flowID:
+                        prop.receivedCodes.add(str(pathID))
+                        if prop.expectedPath != pathID:
+                            print('\nFOR PROPERTY: PATH PREFERENCE.')
+                            print('flowID = '+str(prop.flow.flowID)+' startL = '+str(prop.flow.startLocation)+' endL = '+str(prop.flow.endLocation))
+                            print('PATH CODE: '+ str(pathID))
+                            print('EXPECTED PATH CODE: '+ str(prop.expectedPath))
+                            prop.errorFound = 1
+
     for a in PROPERTIES:
         for prop in PROPERTIES[a]:
             #FINAL RESULT FOR REACHABILITY
@@ -163,6 +181,29 @@ def main():
                     print('PROPERTY HOLD IN THIS TEST')
                 else:
                     print('PROPERTY DID NOT HOLD IN THIS TEST')
+
+            if isinstance(prop, PathPreference):
+                print('\nFOR PROPERTY: PATH PREFERENCE.')
+                print('flowID = '+str(prop.flow.flowID)+' startL = '+str(prop.flow.startLocation)+' endL = '+str(prop.flow.endLocation))
+                print('EXPECTED PATH CODE: ' + str(prop.expectedPath))
+                print("RECEIVED PATH CODES: " + " ".join([str(s) for s in prop.receivedCodes]))
+                if prop.errorFound == 0:
+                    print('PROPERTY HOLD IN THIS TEST')
+                else:
+                    print('PROPERTY DID NOT HOLD IN THIS TEST')
+
+    for prop in multiPathProperties:
+        if isinstance(prop, DisjointPath):
+            print('\nFOR PROPERTY: DISJOINT PATH.')
+            flows = list(prop.sets)
+            print("FLOWS (Start Location, End location, Flow ID)):")
+            for b in flows:
+                print("("+b+")")
+            if prop.errorFound == 0 :
+                print('PROPERTY HOLD IN THIS TEST')
+            else:
+                print('PROPERTY DID NOT HOLD IN THIS TEST')
+            
 
 
 with open('network-e2edelay.json', 'r') as f:
@@ -207,6 +248,15 @@ if 'disjointPath' in configs:
                 PROPERTIES[b["endLocation"]] = []
                 PROPERTIES[b["endLocation"]].append(DisjointPathAux(b["startLocation"], b["endLocation"], b["flowID"], MPid))
         MPid += 1
+
+if 'pathPreference' in configs:
+    r = configs['pathPreference']
+    for a in r:
+        if(a["endLocation"] in PROPERTIES):
+            PROPERTIES[a["endLocation"]].append(PathPreference(a["startLocation"], a["endLocation"], a["flowID"], a["expectedPathCode"]))
+        else:
+            PROPERTIES[a["endLocation"]] = []
+            PROPERTIES[a["endLocation"]].append(PathPreference(a["startLocation"], a["endLocation"], a["flowID"], a["expectedPathCode"]))
 
 
 main()
