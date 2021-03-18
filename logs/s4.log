@@ -1,0 +1,7 @@
+Calling target program-options parser
+Adding interface s4-eth1 as port 1
+Adding interface s4-eth2 as port 2
+Adding interface s4-eth3 as port 3
+Adding interface s4-eth4 as port 4
+Adding interface s4-eth5 as port 5
+I0316 17:28:39.376041283    3718 server_builder.cc:247]      Synchronous server. Num CQs: 1, Min pollers: 1, Max Pollers: 2147483647, CQ timeout (msec): 1000

@@ -1,0 +1,40 @@
+
+[2021-03-16 17:28:41.888] /p4.P4Runtime/SetForwardingPipelineConfig
+---
+Message too long (325361 bytes)! Skipping log...
+---
+
+[2021-03-16 17:28:42.021] /p4.P4Runtime/Write
+---
+device_id: 3
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33556778
+      match {
+        field_id: 1
+        exact {
+          value: "\000\001"
+        }
+      }
+      action {
+        action {
+          action_id: 16783177
+          params {
+            param_id: 1
+            value: "\000\000\000\000\003\000"
+          }
+          params {
+            param_id: 2
+            value: "\000\000\000\000\003\005"
+          }
+        }
+      }
+    }
+  }
+}
+---
