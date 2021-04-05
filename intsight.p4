@@ -6,17 +6,6 @@
 ////////               HEADER DEFINITIONS               ////////
 ////////////////////////////////////////////////////////////////
 
-const bit<8> TYPE_PATH_SRC       = 0x1;
-const bit<8> TYPE_PATH_LENGTH    = 0x2;
-const bit<8> TYPE_PATH_CODE      = 0x3;
-const bit<8> TYPE_CONTENTION_PTS = 0x4;
-const bit<8> TYPE_SUSPICION_PTS  = 0x5;
-const bit<8> TYPE_E2E_DELAY      = 0x6;
-const bit<8> TYPE_INGRESS_PCKTS  = 0x7;
-const bit<8> TYPE_INGRESS_BYTES  = 0x8;
-const bit<8> TYPE_BLOOM_FILTER   = 0x9;
-const bit<8> TYPE_LOOP_DETECTED  = 0x10;
-
 #define ETHERNET_HS 14  // bytes
 header ethernet_h {
     bit<48> dst_addr;
@@ -53,7 +42,7 @@ header ipv4_h {
     bit<32> dst_addr;
 }
 
-#define TELEMETRY_HS 53  // bytes
+#define TELEMETRY_HS 36  // bytes
 header intsight_telemetry_h {
     bit<32> epoch;
     bit<10> path_src;
@@ -64,62 +53,9 @@ header intsight_telemetry_h {
     bit<32> e2e_delay;
     bit<32> ingress_packets;
     bit<32> ingress_bytes;
+    bit<16> loop_identifier;
+    bit<8>  loop_detected;
     bit<8> next_header;
-}
-
-header intsight_telemetry_h1{
-    bit<32> epoch;
-    bit<8>  next_header;
-    bit<8>  h_len;
-}
-
-header path_src_h{
-    bit<8>  type;
-    bit<10> path_src;
-}
-
-header path_length_h{
-    bit<8>  type;
-    bit<6>  path_length;
-}
-header path_code_h{
-    bit<8>  type;
-    bit<16> path_code;
-}
-
-header contention_points_h{
-    bit<8>  type;
-    bit<48> contention_points;
-}
-
-header suspicion_points_h{
-    bit<8>  type;
-    bit<48> suspicion_points;
-}
-
-header e2e_delay_h{
-    bit<8>  type;
-    bit<32> e2e_delay;
-}
-
-header ingress_packets_h{
-    bit<8>  type;
-    bit<32> ingress_packets;
-}
-
-header ingress_bytes_h{
-    bit<8>  type;
-    bit<32> ingress_bytes;
-}
-
-header bloom_filter_h{
-    bit<8>  type;
-    bit<64> vector;
-}
-
-header loop_detected_h{
-    bit<8>  type;
-    bit<8>  detect;
 }
 
 #define REPORT_HS 54  // bytes
@@ -142,7 +78,7 @@ header intsight_report_h {
     bit<32> egress_bytes;
 }
 
-#define LOOP_REPORT_HS 21  // bytes
+#define LOOP_REPORT_HS 15  // bytes
 header loop_report_h {
     bit<32> epoch;
     bit<32> flow_ID;
@@ -151,25 +87,15 @@ header loop_report_h {
     bit<6>  path_length;
     bit<16> path_code;
     bit<8>  node_ID;
-    bit<64> bloom_filter;
+    bit<16> loop_identifier;
 }
 
 struct headers {
     ethernet_h            ethernet;
     arp_h                 arp;
     ipv4_h                ipv4;
+    intsight_telemetry_h  telemetry;
     intsight_report_h     report;
-    intsight_telemetry_h1 telemetry;
-    path_src_h            path_src;
-    path_length_h         path_length;
-    path_code_h           path_code;
-    contention_points_h   contention_points;
-    suspicion_points_h    suspicion_points;
-    e2e_delay_h           e2e_delay;
-    ingress_packets_h     ingress_pckts;
-    ingress_bytes_h       ingress_bytes;
-    bloom_filter_h        bloom_filter;
-    loop_detected_h       loop_detected;
     loop_report_h         loop_report;
 }
 
@@ -179,11 +105,11 @@ struct custom_metadata_t {
     bit<32>  flow_ID;
     bit<10>  node_ID;
     bit<32>  current_epoch;
-    
+
     bit<32>  i_last_epoch;
     bit<32>  i_ingress_packets;
     bit<32>  i_ingress_bytes;
-    
+
     bit<32>  qt_timedelta;
     bit<19>  qt_depth;
     bit<32>  qt_bitrate;
@@ -212,18 +138,12 @@ struct custom_metadata_t {
     bit<1>   e_check_bandwidth_and_drops;
     bit<32>  e_bandwidth_threshold;
     bit<32>  e_drops_threshold;
+    bit<16>  e_loop_identifier;
     bit<1>   e_report;
     bit<32>  e_node_IP_addr;
     bit<32>  e_analyzer_IP_addr;
-    bit<8>   len;
-    bit<8>   hash1;
-    bit<8>   hash2;
-    bit<64>  cmp1;
-    bit<64>  cmp2;
-    bit<32>  nbase;
-    bit<8>   loop;
-    bit<64>  e_bloom_filter;
-    bit<1>   report_type; //set to 0 for end of epoch report, and set to 1 to loop report
+    bit<16>  cmp;
+    bit<1>   report_type;
 }
 
 ////////////////////////////////////////////////////////////////
@@ -249,7 +169,7 @@ struct custom_metadata_t {
 #define PN_DELAY 110
 #define EN_DELAY 60
 
-parser ParserImpl(packet_in pkt, out headers hdrs, inout custom_metadata_t cmd, 
+parser ParserImpl(packet_in pkt, out headers hdrs, inout custom_metadata_t cmd,
                   inout standard_metadata_t smd) {
     state start {
         pkt.extract(hdrs.ethernet);
@@ -259,7 +179,7 @@ parser ParserImpl(packet_in pkt, out headers hdrs, inout custom_metadata_t cmd,
             default: accept;
         }
     }
-    
+
     state parse_arp {
         pkt.extract(hdrs.arp);
         transition select(hdrs.arp.protocol_type) {
@@ -277,106 +197,12 @@ parser ParserImpl(packet_in pkt, out headers hdrs, inout custom_metadata_t cmd,
         }
     }
 
-    state parse_next_telemetry {
+    state parse_intsight_telemetry {
+        pkt.extract(hdrs.telemetry);
         transition select(hdrs.telemetry.next_header) {
             PROTOCOL_INTSIGHT_REPORT: parse_intsight_report;
             default: accept;
         }
-    }
-
-    state parse_intsight_telemetry {
-        pkt.extract(hdrs.telemetry);
-        cmd.len = hdrs.telemetry.h_len;
-        transition select(cmd.len) {
-            0x0: parse_next_telemetry;
-            default: parse_hdrs;
-        }
-    }
-
-    state parse_hdrs {
-        cmd.len = cmd.len - 0x1;
-
-        bit<8> nh = pkt.lookahead<bit<8>>();
-        transition select(nh){
-            TYPE_PATH_SRC : parse_path_src;
-            TYPE_PATH_LENGTH : parse_path_length;
-            TYPE_PATH_CODE : parse_path_code;
-            TYPE_CONTENTION_PTS : parse_contention_pts;
-            TYPE_SUSPICION_PTS : parse_suspicion_pts;
-            TYPE_E2E_DELAY : parse_e2e_delay;
-            TYPE_INGRESS_PCKTS : parse_ingress_pckts;
-            TYPE_INGRESS_BYTES : parse_ingress_bytes;
-            TYPE_BLOOM_FILTER : parse_bloom_filter;
-            TYPE_LOOP_DETECTED : parse_loop_detected;
-            default : accept;
-        }
-    }
-
-    state parse_hdrs_aux {
-        transition select(cmd.len){
-            0x0 : parse_next_telemetry;
-            default : parse_hdrs;
-        }
-    }
-
-    state parse_path_src{
-        pkt.extract(hdrs.path_src);
-
-        transition parse_hdrs_aux;
-    }
-
-    state parse_path_length{
-        pkt.extract(hdrs.path_length);
-
-        transition parse_hdrs_aux;
-    }
-
-    state parse_path_code{
-        pkt.extract(hdrs.path_code);
-
-        transition parse_hdrs_aux;
-    }
-
-    state parse_contention_pts{
-        pkt.extract(hdrs.contention_points);
-
-        transition parse_hdrs_aux;
-    }
-
-    state parse_suspicion_pts{
-        pkt.extract(hdrs.suspicion_points);
-
-        transition parse_hdrs_aux;
-    }
-
-    state parse_e2e_delay{
-        pkt.extract(hdrs.e2e_delay);
-
-        transition parse_hdrs_aux;
-    }
-
-    state parse_ingress_pckts{
-        pkt.extract(hdrs.ingress_pckts);
-
-        transition parse_hdrs_aux;
-    }
-
-    state parse_ingress_bytes{
-        pkt.extract(hdrs.ingress_bytes);
-
-        transition parse_hdrs_aux;
-    }
-
-    state parse_bloom_filter{
-        pkt.extract(hdrs.bloom_filter);
-
-        transition parse_hdrs_aux;
-    }
-
-    state parse_loop_detected{
-        pkt.extract(hdrs.loop_detected);
-
-        transition parse_hdrs_aux;
     }
 
     state parse_intsight_report {
@@ -413,13 +239,13 @@ control verifyChecksum(inout headers hdrs, inout custom_metadata_t cmd) {
                 hdrs.ipv4.src_addr,
                 hdrs.ipv4.dst_addr
             },
-            hdrs.ipv4.header_checksum, 
+            hdrs.ipv4.header_checksum,
             HashAlgorithm.csum16
         );
     }
 }
 
-control ingress(inout headers hdrs, inout custom_metadata_t cmd, 
+control ingress(inout headers hdrs, inout custom_metadata_t cmd,
                 inout standard_metadata_t smd) {
 
     register<bit<10>>(1) node_ID;
@@ -428,17 +254,17 @@ control ingress(inout headers hdrs, inout custom_metadata_t cmd,
     register<bit<32>>(REGWID)  i_epoch;
     register<bit<32>>(REGWID)  i_ingress_packets;
     register<bit<32>>(REGWID)  i_ingress_bytes;
-    
+
     action drop() {
         mark_to_drop();
         // mark_to_drop(smd);
     }
-    
+
     action ipv4_forward(bit<9> port) {
         smd.egress_spec = port;
         hdrs.ipv4.ttl = hdrs.ipv4.ttl - 1;
     }
-    
+
     table ipv4_lpm {
         key = {
             hdrs.ipv4.dst_addr: lpm;
@@ -466,7 +292,7 @@ control ingress(inout headers hdrs, inout custom_metadata_t cmd,
         }
         default_action = set_flow_ID(REGWID - 1);
     }
-    
+
     ///////////////////////////////////////////////////////////////
     ////////          INGRESS PIPELINE APPLY BLOCK         ////////
     ///////////////////////////////////////////////////////////////
@@ -501,7 +327,7 @@ control ingress(inout headers hdrs, inout custom_metadata_t cmd,
                         i_ingress_packets.read(cmd.i_ingress_packets,
                                                 cmd.flow_ID);
                         cmd.i_ingress_packets = cmd.i_ingress_packets + 1;
-                        
+
                         i_ingress_bytes.read(cmd.i_ingress_bytes,
                                                 cmd.flow_ID);
                         cmd.i_ingress_bytes = \
@@ -523,7 +349,7 @@ control ingress(inout headers hdrs, inout custom_metadata_t cmd,
     }
 }
 
-control egress(inout headers hdrs, inout custom_metadata_t cmd, 
+control egress(inout headers hdrs, inout custom_metadata_t cmd,
                inout standard_metadata_t smd) {
 
     // Registers in network egress nodes
@@ -597,14 +423,14 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
     }
 
     action set_path_ID(bit<16> new_path_code) {
-        hdrs.path_code.path_code = new_path_code;
+        hdrs.telemetry.path_code = new_path_code;
     }
 
     table update_path_ID {
         key = {
-            hdrs.path_src.path_src: exact;
-            hdrs.path_length.path_length: exact;
-            hdrs.path_code.path_code: exact;
+            hdrs.telemetry.path_src: exact;
+            hdrs.telemetry.path_length: exact;
+            hdrs.telemetry.path_code: exact;
             smd.egress_port: exact;
         }
         actions = {
@@ -691,7 +517,7 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                 ////////////////////////////////////////////////////////////////
                 if(!hdrs.telemetry.isValid() && cmd.is_ingress_node == 1) {
                     // CREATE TELEMETRY FIELDS
-                    /*hdrs.telemetry.setValid();
+                    hdrs.telemetry.setValid();
                     hdrs.telemetry.epoch = cmd.current_epoch;
                     hdrs.telemetry.path_src = cmd.node_ID;
                     hdrs.telemetry.path_length = 0;
@@ -700,56 +526,9 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                     hdrs.telemetry.ingress_packets = cmd.i_ingress_packets;
                     hdrs.telemetry.ingress_bytes = cmd.i_ingress_bytes;
                     hdrs.telemetry.contention_points = 0;
-                    hdrs.telemetry.next_header = hdrs.ipv4.protocol;*/
-
-                    hdrs.telemetry.setValid();
+                    hdrs.telemetry.loop_identifier = 0;
+                    hdrs.telemetry.loop_detected = 0;
                     hdrs.telemetry.next_header = hdrs.ipv4.protocol;
-                    hdrs.telemetry.epoch = cmd.current_epoch;
-                    hdrs.telemetry.h_len = 0x11;
-
-                    hdrs.path_src.setValid();
-                    hdrs.path_src.type = TYPE_PATH_SRC;
-                    hdrs.path_src.path_src = cmd.node_ID;
-
-                    hdrs.path_length.setValid();
-                    hdrs.path_length.type = TYPE_PATH_LENGTH;
-                    hdrs.path_length.path_length = 0;
-
-                    hdrs.path_code.setValid();
-                    hdrs.path_code.type = TYPE_PATH_CODE;
-                    hdrs.path_code.path_code = 0;
-
-                    hdrs.e2e_delay.setValid();
-                    hdrs.e2e_delay.type = TYPE_E2E_DELAY;
-                    hdrs.e2e_delay.e2e_delay = IN_DELAY;  // 120
-
-                    hdrs.ingress_pckts.setValid();
-                    hdrs.ingress_pckts.type = TYPE_INGRESS_PCKTS;
-                    hdrs.ingress_pckts.ingress_packets = cmd.i_ingress_packets;
-
-                    hdrs.ingress_bytes.setValid();
-                    hdrs.ingress_bytes.type = TYPE_INGRESS_BYTES;
-                    hdrs.ingress_bytes.ingress_bytes = cmd.i_ingress_bytes;
-
-                    hdrs.contention_points.setValid();
-                    hdrs.contention_points.type = TYPE_CONTENTION_PTS;
-                    hdrs.contention_points.contention_points = 0;
-
-                    hdrs.suspicion_points.setValid();
-                    hdrs.suspicion_points.type = TYPE_SUSPICION_PTS;
-                    hdrs.suspicion_points.suspicion_points = 0;
-
-                    hdrs.bloom_filter.setValid();
-                    hdrs.bloom_filter.type = TYPE_BLOOM_FILTER;
-                    hdrs.bloom_filter.vector = 0;
-                    hash(cmd.hash1, HashAlgorithm.crc32, cmd.nbase,  {cmd.node_ID}, (bit<8>) 64); 
-                    hash(cmd.hash2, HashAlgorithm.xor16, cmd.nbase,  {cmd.node_ID}, (bit<8>) 64);
-                    hdrs.bloom_filter.vector = hdrs.bloom_filter.vector | ((bit<64>) 1 << cmd.hash1);
-                    hdrs.bloom_filter.vector = hdrs.bloom_filter.vector | ((bit<64>) 1 << cmd.hash2);
-
-                    hdrs.loop_detected.setValid();
-                    hdrs.loop_detected.type = TYPE_LOOP_DETECTED;
-                    hdrs.loop_detected.detect = 0;
 
                     hdrs.ipv4.protocol = PROTOCOL_INTSIGHT_TELEMETRY;
                     hdrs.ipv4.total_length = hdrs.ipv4.total_length
@@ -761,67 +540,66 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                 ////////////////////////////////////////////////////////////////
                 if(hdrs.telemetry.isValid()) {
                     // INCREMENT FIELD: END-TO-END DELAY
-                    hdrs.e2e_delay.e2e_delay = \
-                        hdrs.e2e_delay.e2e_delay
+                    hdrs.telemetry.e2e_delay = \
+                        hdrs.telemetry.e2e_delay
                         + PN_DELAY
                         + (smd.deq_timedelta);
                     // CONTENTION?
                     contention_thresholds.apply();
-                    if(smd.deq_timedelta >= cmd.qt_timedelta 
+                    if(smd.deq_timedelta >= cmd.qt_timedelta
                             || smd.enq_qdepth >= cmd.qt_depth) {
                         // MARK FIELD: CONTENTION POINTS
-                        hdrs.contention_points.contention_points = \
-                            hdrs.contention_points.contention_points
-                            | ((bit<48>) 1) << hdrs.path_length.path_length;
+                        hdrs.telemetry.contention_points = \
+                            hdrs.telemetry.contention_points
+                            | ((bit<48>) 1) << hdrs.telemetry.path_length;
                     }
                     // SUSPICION?
                     suspicion_thresholds.apply();
-                    if(hdrs.ingress_bytes.ingress_bytes >= cmd.qt_bitrate) {
+                    if(hdrs.telemetry.ingress_bytes >= cmd.qt_bitrate) {
                         // MARK FIELD: SUSPICION POINTS
-                        hdrs.suspicion_points.suspicion_points = \
-                            hdrs.suspicion_points.suspicion_points
-                            | ((bit<48>) 1) << hdrs.path_length.path_length;
-                    }
-                    //LOOP?
-                    if(hdrs.bloom_filter.isValid()){
-                        hash(cmd.hash1, HashAlgorithm.crc32, cmd.nbase,  {cmd.node_ID}, (bit<8>) 64); 
-                        hash(cmd.hash2, HashAlgorithm.xor16, cmd.nbase,  {cmd.node_ID}, (bit<8>) 64);
-                        
-                        cmd.cmp1 = hdrs.bloom_filter.vector | ((bit<64>) 1 << cmd.hash1);
-                        cmd.cmp2 = cmd.cmp1 | ((bit<64>) 1 << cmd.hash2);
-                        
-                        if(hdrs.bloom_filter.vector == cmd.cmp2){
-                            hdrs.loop_detected.detect = 0x1;
-                            cmd.report_type = 0x1;
-                            cmd.e_bloom_filter = hdrs.bloom_filter.vector;
-                            clone3(CloneType.E2E, INTSIGHT_MIRROR_SESSION, {cmd});
-                        }
+                        hdrs.telemetry.suspicion_points = \
+                            hdrs.telemetry.suspicion_points
+                            | ((bit<48>) 1) << hdrs.telemetry.path_length;
                     }
                     // UPDATE FIELD: PATH ID
                     update_path_ID.apply();
-                    hdrs.path_length.path_length =
-                        hdrs.path_length.path_length + 1;
+                    hdrs.telemetry.path_length =
+                        hdrs.telemetry.path_length + 1;
+
+                    // LOOP?
+                    cmd.cmp = \
+                      hdrs.telemetry.loop_identifier
+                      | ((bit<16>) 1) << ((bit<8>) cmd.node_ID);
+
+                    if(hdrs.telemetry.loop_identifier == cmd.cmp && hdrs.telemetry.loop_detected == 0x0){
+                        hdrs.telemetry.loop_detected = 0x1;
+                        cmd.report_type = 0x1;
+                        cmd.e_loop_identifier = hdrs.telemetry.loop_identifier;
+                        clone3(CloneType.E2E, INTSIGHT_MIRROR_SESSION, {cmd});
+                    }else{
+                      hdrs.telemetry.loop_identifier = cmd.cmp;
+                    }
                 }
 
                 ////////////////////////////////////////////////////////////////
                 ////////             EGRESS NODE PROCESSING             ////////
                 ////////////////////////////////////////////////////////////////
                 if(hdrs.telemetry.isValid() && cmd.is_egress_node == 1) {
-                    
-                    hdrs.e2e_delay.e2e_delay = hdrs.e2e_delay.e2e_delay + EN_DELAY;
+
+                    hdrs.telemetry.e2e_delay = hdrs.telemetry.e2e_delay + EN_DELAY;
 
                     // if(cmd.is_egress_node == 1) {
-                    //     hdrs.e2e_delay.e2e_delay =
-                    //         hdrs.e2e_delay.e2e_delay + 130;
+                    //     hdrs.telemetry.e2e_delay =
+                    //         hdrs.telemetry.e2e_delay + 130;
                     // } else {
-                    //     hdrs.e2e_delay.e2e_delay =
-                    //         hdrs.e2e_delay.e2e_delay + 190;
+                    //     hdrs.telemetry.e2e_delay =
+                    //         hdrs.telemetry.e2e_delay + 190;
                     // }
 
                     // HIGH END-TO-END DELAY?
                     e2e_delay_threshold.apply();
                     if(cmd.e_check_e2e_delay == 1
-                        && (hdrs.e2e_delay.e2e_delay
+                        && (hdrs.telemetry.e2e_delay
                             >= cmd.e_e2e_delay_threshold)) {
                         cmd.e_high_e2e_delay = 1;
                     } else {
@@ -830,7 +608,7 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
 
                     // UPDATE REGISTERS
                     // ================
-                    // EPOCH: Store the last epoch in cmd.e_epoch and update 
+                    // EPOCH: Store the last epoch in cmd.e_epoch and update
                     // the register value to the newly received one.
                     e_epoch.read(cmd.e_epoch, cmd.flow_ID);
                     e_epoch.write(cmd.flow_ID, hdrs.telemetry.epoch);
@@ -843,24 +621,24 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                     // PATH ID: Store the last path in cmd.e_path_src,length,
                     // code and update the registers to the newly received one.
                     e_path_src.read(cmd.e_path_src, cmd.flow_ID);
-                    e_path_src.write(cmd.flow_ID, hdrs.path_src.path_src);
+                    e_path_src.write(cmd.flow_ID, hdrs.telemetry.path_src);
                     e_path_length.read(cmd.e_path_length, cmd.flow_ID);
                     e_path_length.write(cmd.flow_ID,
-                                        hdrs.path_length.path_length);
+                                        hdrs.telemetry.path_length);
                     e_path_code.read(cmd.e_path_code, cmd.flow_ID);
-                    e_path_code.write(cmd.flow_ID, hdrs.path_code.path_code);
-                    
+                    e_path_code.write(cmd.flow_ID, hdrs.telemetry.path_code);
+
                     // HIGH DELAYS
                     e_high_delays.read(cmd.e_high_delays, cmd.flow_ID);
                     if(hdrs.telemetry.epoch != cmd.e_epoch) {
-                        // Reset counter in the case of a new epoch. The 
-                        // counter is set to 0 or 1 depending if the current 
+                        // Reset counter in the case of a new epoch. The
+                        // counter is set to 0 or 1 depending if the current
                         // packet observed a high end-to-end delay.
                         e_high_delays.write(cmd.flow_ID,
                                             (bit<32>) cmd.e_high_e2e_delay);
                     } else if(cmd.e_high_e2e_delay == 1) {
-                        // Increment by one the counter if we are in the same 
-                        // epoch and the current packet observed a high 
+                        // Increment by one the counter if we are in the same
+                        // epoch and the current packet observed a high
                         // end-to-end delay.
                         e_high_delays.write(cmd.flow_ID, cmd.e_high_delays + 1);
                     }
@@ -869,11 +647,11 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                     // in cmd.e_ingress_packets,bytes and update the registers
                     // to the newly received values.
                     e_ingress_packets.read(cmd.e_ingress_packets, cmd.flow_ID);
-                    e_ingress_packets.write(cmd.flow_ID, 
-                                            hdrs.ingress_pckts.ingress_packets);
+                    e_ingress_packets.write(cmd.flow_ID,
+                                            hdrs.telemetry.ingress_packets);
                     e_ingress_bytes.read(cmd.e_ingress_bytes, cmd.flow_ID);
                     e_ingress_bytes.write(cmd.flow_ID,
-                                            hdrs.ingress_bytes.ingress_bytes);
+                                            hdrs.telemetry.ingress_bytes);
 
                     // EGRESS PACKETS AND BYTES
                     e_egress_packets.read(cmd.e_egress_packets, cmd.flow_ID);
@@ -916,7 +694,7 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                         // in the case of a new epoch.
                         e_contention_points.write(
                             cmd.flow_ID,
-                            hdrs.contention_points.contention_points
+                            hdrs.telemetry.contention_points
                         );
                     } else {
                         // and update the register with the newly identified
@@ -924,7 +702,7 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                         e_contention_points.write(
                             cmd.flow_ID,
                             (cmd.e_contention_points
-                            | hdrs.contention_points.contention_points)
+                            | hdrs.telemetry.contention_points)
                         );
                     }
 
@@ -938,7 +716,7 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                         // in the case of a new epoch.
                         e_suspicion_points.write(
                             cmd.flow_ID,
-                            hdrs.suspicion_points.suspicion_points
+                            hdrs.telemetry.suspicion_points
                         );
                     } else {
                         // and update the register with the newly identified
@@ -946,7 +724,7 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                         e_suspicion_points.write(
                             cmd.flow_ID,
                             (cmd.e_suspicion_points
-                            | hdrs.suspicion_points.suspicion_points)
+                            | hdrs.telemetry.suspicion_points)
                         );
                     }
                     // END OF UPDATE REGISTERS
@@ -996,87 +774,76 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
 
                     // Remove telmetry fields from the packet.
                     hdrs.ipv4.protocol = hdrs.telemetry.next_header;
-                    hdrs.ipv4.total_length = 
+                    hdrs.ipv4.total_length =
                         hdrs.ipv4.total_length - TELEMETRY_HS;
                     hdrs.telemetry.setInvalid();
-                    hdrs.path_src.setInvalid();
-                    hdrs.path_length.setInvalid();
-                    hdrs.path_code.setInvalid();
-                    hdrs.contention_points.setInvalid();
-                    hdrs.suspicion_points.setInvalid();
-                    hdrs.e2e_delay.setInvalid();
-                    hdrs.ingress_pckts.setInvalid();
-                    hdrs.ingress_bytes.setInvalid();
-                    hdrs.bloom_filter.setInvalid();
-                    hdrs.loop_detected.setInvalid();
                 }
             } else if(smd.instance_type == CLONE_PACKET) {
+              if(cmd.report_type == 0x0){
+                 // Create IntSight report header.
+                 hdrs.report.setValid();
+                 hdrs.report.epoch = cmd.e_epoch;
+                 hdrs.report.egress_epoch = cmd.e_egress_epoch;
+                 hdrs.report.flow_ID = cmd.flow_ID;
+                 hdrs.report.path_src = cmd.e_path_src;
+                 hdrs.report.path_length = cmd.e_path_length;
+                 hdrs.report.path_code = cmd.e_path_code;
+                 hdrs.report.contention_points = cmd.e_contention_points;
+                 hdrs.report.suspicion_points = cmd.e_suspicion_points;
+                 hdrs.report.path_dst = (bit<16>) cmd.node_ID;
+                 hdrs.report.high_delays = cmd.e_high_delays;
+                 hdrs.report.drops = cmd.e_drops;
+                 hdrs.report.ingress_packets = cmd.e_ingress_packets;
+                 hdrs.report.ingress_bytes = cmd.e_ingress_bytes;
+                 hdrs.report.egress_packets = cmd.e_egress_packets;
+                 hdrs.report.egress_bytes = cmd.e_egress_bytes;
 
-                 if(cmd.report_type == 0x0){
-                    // Create IntSight report header.
-                    hdrs.report.setValid();
-                    hdrs.report.epoch = cmd.e_epoch;
-                    hdrs.report.egress_epoch = cmd.e_egress_epoch;
-                    hdrs.report.flow_ID = cmd.flow_ID;
-                    hdrs.report.path_src = cmd.e_path_src;
-                    hdrs.report.path_length = cmd.e_path_length;
-                    hdrs.report.path_code = cmd.e_path_code;
-                    hdrs.report.contention_points = cmd.e_contention_points;
-                    hdrs.report.suspicion_points = cmd.e_suspicion_points;
-                    hdrs.report.path_dst = (bit<16>) cmd.node_ID;
-                    hdrs.report.high_delays = cmd.e_high_delays;
-                    hdrs.report.drops = cmd.e_drops;
-                    hdrs.report.ingress_packets = cmd.e_ingress_packets;
-                    hdrs.report.ingress_bytes = cmd.e_ingress_bytes;
-                    hdrs.report.egress_packets = cmd.e_egress_packets;
-                    hdrs.report.egress_bytes = cmd.e_egress_bytes;
+                 // Rewrite IPv4 header to transform packet into a report.
+                 hdrs.ipv4.ihl = 5;
+                 hdrs.ipv4.dscp = 42;
+                 hdrs.ipv4.ecn = 0;
+                 hdrs.ipv4.total_length = IPV4_HS + REPORT_HS;
+                 hdrs.ipv4.identification = 1;
+                 hdrs.ipv4.flags = 0;
+                 hdrs.ipv4.fragment_offset = 0;
+                 hdrs.ipv4.ttl = 64;
+                 hdrs.ipv4.protocol = PROTOCOL_INTSIGHT_REPORT;
+                 hdrs.ipv4.header_checksum = 0;  // Will be set on actual egress
 
-                    // Rewrite IPv4 header to transform packet into a report.
-                    hdrs.ipv4.ihl = 5;
-                    hdrs.ipv4.dscp = 42;
-                    hdrs.ipv4.ecn = 0;
-                    hdrs.ipv4.total_length = IPV4_HS + REPORT_HS;
-                    hdrs.ipv4.identification = 1;
-                    hdrs.ipv4.flags = 0;
-                    hdrs.ipv4.fragment_offset = 0;
-                    hdrs.ipv4.ttl = 64;
-                    hdrs.ipv4.protocol = PROTOCOL_INTSIGHT_REPORT;
-                    hdrs.ipv4.header_checksum = 0;  // Will be set on actual egress
-                    
-                }else{
-                    hdrs.loop_report.setValid();
-                    hdrs.loop_report.epoch = cmd.e_epoch;
-                    hdrs.loop_report.flow_ID = cmd.flow_ID;
-                    hdrs.loop_report.path_src = cmd.e_path_src;
-                    hdrs.loop_report.path_length = cmd.e_path_length;
-                    hdrs.loop_report.path_code = cmd.e_path_code;
-                    hdrs.loop_report.node_ID = (bit<8>) cmd.node_ID;
-                    hdrs.loop_report.bloom_filter = cmd.e_bloom_filter;
+             }else{
+                 hdrs.loop_report.setValid();
+                 hdrs.loop_report.epoch = cmd.e_epoch;
+                 hdrs.loop_report.flow_ID = cmd.flow_ID;
+                 hdrs.loop_report.path_src = cmd.e_path_src;
+                 hdrs.loop_report.path_length = cmd.e_path_length;
+                 hdrs.loop_report.path_code = cmd.e_path_code;
+                 hdrs.loop_report.node_ID = (bit<8>) cmd.node_ID;
+                 hdrs.loop_report.loop_identifier = cmd.e_loop_identifier;
 
-                    // Rewrite IPv4 header to transform packet into a report.
-                    hdrs.ipv4.ihl = 5;
-                    hdrs.ipv4.dscp = 42;
-                    hdrs.ipv4.ecn = 0;
-                    hdrs.ipv4.total_length = IPV4_HS + LOOP_REPORT_HS;
-                    hdrs.ipv4.identification = 1;
-                    hdrs.ipv4.flags = 0;
-                    hdrs.ipv4.fragment_offset = 0;
-                    hdrs.ipv4.ttl = 64;
-                    hdrs.ipv4.protocol = PROTOCOL_LOOP_REPORT;
-                    hdrs.ipv4.header_checksum = 0;  // Will be set on actual egress
-                }
+                 // Rewrite IPv4 header to transform packet into a report.
+                 hdrs.ipv4.ihl = 5;
+                 hdrs.ipv4.dscp = 42;
+                 hdrs.ipv4.ecn = 0;
+                 hdrs.ipv4.total_length = IPV4_HS + LOOP_REPORT_HS;
+                 hdrs.ipv4.identification = 1;
+                 hdrs.ipv4.flags = 0;
+                 hdrs.ipv4.fragment_offset = 0;
+                 hdrs.ipv4.ttl = 64;
+                 hdrs.ipv4.protocol = PROTOCOL_LOOP_REPORT;
+                 hdrs.ipv4.header_checksum = 0;  // Will be set on actual egress
+             }
 
-                node_and_analyzer_IP_addr.apply();
-                hdrs.ipv4.src_addr = cmd.e_node_IP_addr;
-                hdrs.ipv4.dst_addr = cmd.e_analyzer_IP_addr;
+             node_and_analyzer_IP_addr.apply();
+             hdrs.ipv4.src_addr = cmd.e_node_IP_addr;
+             hdrs.ipv4.dst_addr = cmd.e_analyzer_IP_addr;
 
-                if(cmd.report_type == 0x0){
-                    // Trucate the packet to contain only Ethernet+IPv4+Report.
-                    truncate(ETHERNET_HS + IPV4_HS + REPORT_HS);
-                }else{
-                    // Trucate the packet to contain only Ethernet+IPv4+Report.
-                    truncate(ETHERNET_HS + IPV4_HS + LOOP_REPORT_HS);
-                }
+             if(cmd.report_type == 0x0){
+                 // Trucate the packet to contain only Ethernet+IPv4+Report.
+                 truncate(ETHERNET_HS + IPV4_HS + REPORT_HS);
+             }else{
+                 // Trucate the packet to contain only Ethernet+IPv4+Report.
+                 truncate(ETHERNET_HS + IPV4_HS + LOOP_REPORT_HS);
+             }
             }
             // }
         } else {
@@ -1104,7 +871,7 @@ control computeChecksum(inout headers hdrs, inout custom_metadata_t cmd) {
                 hdrs.ipv4.src_addr,
                 hdrs.ipv4.dst_addr
             },
-            hdrs.ipv4.header_checksum, 
+            hdrs.ipv4.header_checksum,
             HashAlgorithm.csum16
         );
     }
@@ -1116,17 +883,7 @@ control DeparserImpl(packet_out pkt, in headers hdrs) {
         pkt.emit(hdrs.arp);
         pkt.emit(hdrs.ipv4);
         pkt.emit(hdrs.telemetry);
-        pkt.emit(hdrs.path_src);
-        pkt.emit(hdrs.path_length);
-        pkt.emit(hdrs.path_code);
-        pkt.emit(hdrs.contention_points);
-        pkt.emit(hdrs.suspicion_points);
-        pkt.emit(hdrs.e2e_delay);
-        pkt.emit(hdrs.ingress_pckts);
-        pkt.emit(hdrs.ingress_bytes);
-        pkt.emit(hdrs.bloom_filter);
         pkt.emit(hdrs.report);
-        pkt.emit(hdrs.loop_report);
     }
 }
 

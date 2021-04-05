@@ -106,19 +106,19 @@ tables {
   }
   match_fields {
     id: 1
-    name: "hdrs.path_src.path_src"
+    name: "hdrs.telemetry.path_src"
     bitwidth: 10
     match_type: EXACT
   }
   match_fields {
     id: 2
-    name: "hdrs.path_length.path_length"
+    name: "hdrs.telemetry.path_length"
     bitwidth: 6
     match_type: EXACT
   }
   match_fields {
     id: 3
-    name: "hdrs.path_code.path_code"
+    name: "hdrs.telemetry.path_code"
     bitwidth: 16
     match_type: EXACT
   }
