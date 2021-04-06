@@ -59,7 +59,7 @@ class IntSight_Report(Packet):
                 self.egress_bytes*8,
             )
         return out
-    
+
     def csv(self):
         out = ''
         out += '{:d},{:d},{:d},'.format(self.epoch, self.egress_epoch, self.flow_ID)
@@ -94,7 +94,7 @@ class Loop_Report(Packet):
         BitField("path_length", 0,  6),
         ShortField("path_code", 0),
         BitField("node_ID", 0, 8),
-        BitField("bloom_filter", 0, 64),
+        BitField("bloom_filter", 0, 16),
     ]
 
     def __repr__(self):
@@ -102,17 +102,17 @@ class Loop_Report(Packet):
         # out += '[{:4d}:{:2d}] '.format(self.epoch, self.egress_epoch, self.flow_ID)
         out += '[{:4d}:{:2d}] '.format(self.epoch, self.flow_ID)
         fmt = '{{:0{}b}}'.format(self.path_length)
-        out += '({:1d} => {:d}, p={:d}, len={:d}, bloom={}) '.format(
+        out += '({:1d} => {:b}, p={:d}, len={:d}, bloom={}) '.format(
             self.path_src, self.node_ID, self.path_code, self.path_length, self.bloom_filter
         )
         return out
-    
+
     def csv(self):
         out = ''
         # out += '{:d},{:d},{:d},'.format(self.epoch, self.egress_epoch, self.flow_ID)
         out += '{:d},{:d},'.format(self.epoch, self.flow_ID)
         fmt = '{{:0{}b}}'.format(self.path_length)
-        out += '{:d},{:d},{:d},{:d},{}'.format(
+        out += '{:d},{:b},{:d},{:d},{}'.format(
             self.path_src, self.node_ID, self.path_code, self.path_length, self.bloom_filter
         )
         return out
@@ -131,7 +131,7 @@ class PacketSniffer(threading.Thread):
             f.write('epoch,eepoch,flow,psrc,pdst,path,plen,cps,sps,hds,' \
             # f.write('epoch,flow,psrc,pdst,path,plen,cps,sps,hds,' \
                     'ipkts,epkts,drops,ibytes,ebytes\n')
-    
+
     def log_packet(self, pkt):
         if IntSight_Report in pkt:
             with open(self.log_filename + '.txt', 'a') as f:
@@ -153,7 +153,7 @@ class PacketSniffer(threading.Thread):
 def main(n_nodes=5, username=None):
     bind_layers(IP, IntSight_Report, proto=224)
     bind_layers(IP, Loop_Report, proto=225)
-    
+
     print('Creating sniffer threads.')
     sniffers = []
     for i in range(n_nodes):
@@ -161,7 +161,7 @@ def main(n_nodes=5, username=None):
     print('Starting the sniffer threads.')
     for s in sniffers:
         s.start()
-    
+
     # print('Waiting to finish.', end='')
     stop_flag = 0
     while stop_flag == 0:

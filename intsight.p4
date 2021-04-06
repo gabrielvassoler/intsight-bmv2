@@ -884,6 +884,7 @@ control DeparserImpl(packet_out pkt, in headers hdrs) {
         pkt.emit(hdrs.ipv4);
         pkt.emit(hdrs.telemetry);
         pkt.emit(hdrs.report);
+        pkt.emit(hdrs.loop_report);
     }
 }
 
