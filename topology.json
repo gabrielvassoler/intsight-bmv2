@@ -1,21 +1,5 @@
 {
     "workload_file": "experiments/bandwidth/workload.json",
-    "hosts": [
-        "h3",
-        "h11",
-        "h10",
-        "h7",
-        "h9",
-        "h4",
-        "h1",
-        "h12",
-        "h2",
-        "h13",
-        "h5",
-        "h8",
-        "h6",
-        "h14"
-    ],
     "links": [
         [
             "h1",
@@ -193,38 +177,54 @@
         ]
     ],
     "capture_traffic": false,
+    "hosts": [
+        "h1",
+        "h3",
+        "h14",
+        "h6",
+        "h12",
+        "h10",
+        "h7",
+        "h8",
+        "h9",
+        "h2",
+        "h5",
+        "h4",
+        "h13",
+        "h11"
+    ],
     "run_workload": true,
     "switches": {
-        "s4": {
-            "cli_input": "s4-cli.txt",
-            "runtime_json": "s4-runtime.json"
-        },
-        "s5": {
-            "cli_input": "s5-cli.txt",
-            "runtime_json": "s5-runtime.json"
-        },
-        "s2": {
-            "cli_input": "s2-cli.txt",
-            "runtime_json": "s2-runtime.json"
-        },
-        "s3": {
-            "cli_input": "s3-cli.txt",
-            "runtime_json": "s3-runtime.json"
-        },
         "s1": {
-            "cli_input": "s1-cli.txt",
-            "runtime_json": "s1-runtime.json"
+            "runtime_json": "s1-runtime.json",
+            "cli_input": "s1-cli.txt"
         },
         "s0": {
             "runtime_json": "s0-runtime.json"
         },
         "s7": {
-            "cli_input": "s7-cli.txt",
-            "runtime_json": "s7-runtime.json"
+            "runtime_json": "s7-runtime.json",
+            "cli_input": "s7-cli.txt"
+        },
+        "s2": {
+            "runtime_json": "s2-runtime.json",
+            "cli_input": "s2-cli.txt"
+        },
+        "s3": {
+            "runtime_json": "s3-runtime.json",
+            "cli_input": "s3-cli.txt"
+        },
+        "s5": {
+            "runtime_json": "s5-runtime.json",
+            "cli_input": "s5-cli.txt"
+        },
+        "s4": {
+            "runtime_json": "s4-runtime.json",
+            "cli_input": "s4-cli.txt"
         },
         "s6": {
-            "cli_input": "s6-cli.txt",
-            "runtime_json": "s6-runtime.json"
+            "runtime_json": "s6-runtime.json",
+            "cli_input": "s6-cli.txt"
         }
     }
 }
