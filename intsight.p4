@@ -193,6 +193,7 @@ parser ParserImpl(packet_in pkt, out headers hdrs, inout custom_metadata_t cmd,
         transition select(hdrs.ipv4.protocol) {
             PROTOCOL_INTSIGHT_TELEMETRY: parse_intsight_telemetry;
             PROTOCOL_INTSIGHT_REPORT: parse_intsight_report;
+            PROTOCOL_LOOP_REPORT: parse_loop_report;
             default: accept;
         }
     }
@@ -201,12 +202,18 @@ parser ParserImpl(packet_in pkt, out headers hdrs, inout custom_metadata_t cmd,
         pkt.extract(hdrs.telemetry);
         transition select(hdrs.telemetry.next_header) {
             PROTOCOL_INTSIGHT_REPORT: parse_intsight_report;
+            PROTOCOL_LOOP_REPORT: parse_loop_report;
             default: accept;
         }
     }
 
     state parse_intsight_report {
         pkt.extract(hdrs.report);
+        transition accept;
+    }
+
+    state parse_loop_report {
+        pkt.extract(hdrs.loop_report);
         transition accept;
     }
 }
