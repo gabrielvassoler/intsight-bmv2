@@ -228,7 +228,8 @@ def main():
 
     if controller: controller.stop()
 
-    net.stop()
+
+    #net.stop()
 
 #    if bmv2_log:
 #        os.system('bash -c "cp /tmp/p4s.s*.log \'%s\'"' % args.log_dir)

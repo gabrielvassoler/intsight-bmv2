@@ -60,6 +60,7 @@
         ["custom_metadata_t.e_analyzer_IP_addr", 32, false],
         ["custom_metadata_t.cmp", 16, false],
         ["custom_metadata_t.report_type", 1, false],
+        ["custom_metadata_t.aux", 32, false],
         ["_padding_0", 2, false]
       ]
     },
@@ -412,6 +413,10 @@
         {
           "type" : "field",
           "value" : ["scalars", "custom_metadata_t.report_type"]
+        },
+        {
+          "type" : "field",
+          "value" : ["scalars", "custom_metadata_t.aux"]
         }
       ]
     },
@@ -578,6 +583,10 @@
         {
           "type" : "field",
           "value" : ["scalars", "custom_metadata_t.report_type"]
+        },
+        {
+          "type" : "field",
+          "value" : ["scalars", "custom_metadata_t.aux"]
         }
       ]
     }
@@ -699,6 +708,12 @@
               "next_state" : "parse_intsight_report"
             },
             {
+              "type" : "hexstr",
+              "value" : "0xe1",
+              "mask" : null,
+              "next_state" : "parse_loop_report"
+            },
+            {
               "value" : "default",
               "mask" : null,
               "next_state" : null
@@ -731,6 +746,12 @@
               "value" : "0xe0",
               "mask" : null,
               "next_state" : "parse_intsight_report"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0xe1",
+              "mask" : null,
+              "next_state" : "parse_loop_report"
             },
             {
               "value" : "default",
@@ -767,6 +788,29 @@
             }
           ],
           "transition_key" : []
+        },
+        {
+          "name" : "parse_loop_report",
+          "id" : 5,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "loop_report"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
         }
       ]
     }
@@ -778,11 +822,11 @@
       "id" : 0,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 880,
+        "line" : 902,
         "column" : 8,
         "source_fragment" : "DeparserImpl"
       },
-      "order" : ["ethernet", "arp", "ipv4", "telemetry", "report"]
+      "order" : ["ethernet", "arp", "ipv4", "loop_report", "telemetry", "report"]
     }
   ],
   "meter_arrays" : [],
@@ -793,7 +837,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 251,
+        "line" : 259,
         "column" : 25,
         "source_fragment" : "node_ID"
       },
@@ -805,7 +849,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 254,
+        "line" : 262,
         "column" : 27,
         "source_fragment" : "i_epoch"
       },
@@ -817,7 +861,7 @@
       "id" : 2,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 255,
+        "line" : 263,
         "column" : 27,
         "source_fragment" : "i_ingress_packets"
       },
@@ -829,7 +873,7 @@
       "id" : 3,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 256,
+        "line" : 264,
         "column" : 27,
         "source_fragment" : "i_ingress_bytes"
       },
@@ -841,7 +885,7 @@
       "id" : 4,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 356,
+        "line" : 364,
         "column" : 27,
         "source_fragment" : "e_epoch"
       },
@@ -853,7 +897,7 @@
       "id" : 5,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 357,
+        "line" : 365,
         "column" : 27,
         "source_fragment" : "e_egress_epoch"
       },
@@ -865,7 +909,7 @@
       "id" : 6,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 358,
+        "line" : 366,
         "column" : 27,
         "source_fragment" : "e_path_src"
       },
@@ -877,7 +921,7 @@
       "id" : 7,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 359,
+        "line" : 367,
         "column" : 26,
         "source_fragment" : "e_path_length"
       },
@@ -889,7 +933,7 @@
       "id" : 8,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 360,
+        "line" : 368,
         "column" : 27,
         "source_fragment" : "e_path_code"
       },
@@ -901,7 +945,7 @@
       "id" : 9,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 361,
+        "line" : 369,
         "column" : 27,
         "source_fragment" : "e_contention_points"
       },
@@ -913,7 +957,7 @@
       "id" : 10,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 362,
+        "line" : 370,
         "column" : 27,
         "source_fragment" : "e_suspicion_points"
       },
@@ -925,7 +969,7 @@
       "id" : 11,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 363,
+        "line" : 371,
         "column" : 27,
         "source_fragment" : "e_high_delays"
       },
@@ -937,7 +981,7 @@
       "id" : 12,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 364,
+        "line" : 372,
         "column" : 27,
         "source_fragment" : "e_ingress_packets"
       },
@@ -949,7 +993,7 @@
       "id" : 13,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 365,
+        "line" : 373,
         "column" : 27,
         "source_fragment" : "e_ingress_bytes"
       },
@@ -961,7 +1005,7 @@
       "id" : 14,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 366,
+        "line" : 374,
         "column" : 27,
         "source_fragment" : "e_egress_packets"
       },
@@ -973,11 +1017,47 @@
       "id" : 15,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 367,
+        "line" : 375,
         "column" : 27,
         "source_fragment" : "e_egress_bytes"
       },
       "size" : 100,
+      "bitwidth" : 32
+    },
+    {
+      "name" : "egress.help_me",
+      "id" : 16,
+      "source_info" : {
+        "filename" : "intsight.p4",
+        "line" : 377,
+        "column" : 28,
+        "source_fragment" : "help_me"
+      },
+      "size" : 1024,
+      "bitwidth" : 16
+    },
+    {
+      "name" : "egress.help_me_shift",
+      "id" : 17,
+      "source_info" : {
+        "filename" : "intsight.p4",
+        "line" : 378,
+        "column" : 28,
+        "source_fragment" : "help_me_shift"
+      },
+      "size" : 1024,
+      "bitwidth" : 16
+    },
+    {
+      "name" : "egress.contador",
+      "id" : 18,
+      "source_info" : {
+        "filename" : "intsight.p4",
+        "line" : 379,
+        "column" : 25,
+        "source_fragment" : "contador"
+      },
+      "size" : 1,
       "bitwidth" : 32
     }
   ],
@@ -987,7 +1067,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 226,
+        "line" : 234,
         "column" : 8,
         "source_fragment" : "verify_checksum( ..."
       },
@@ -1048,7 +1128,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 858,
+        "line" : 880,
         "column" : 8,
         "source_fragment" : "update_checksum( ..."
       },
@@ -1123,7 +1203,7 @@
           "parameters" : [],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 259,
+            "line" : 267,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -1154,7 +1234,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 264,
+            "line" : 272,
             "column" : 8,
             "source_fragment" : "smd.egress_spec = port"
           }
@@ -1196,7 +1276,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 265,
+            "line" : 273,
             "column" : 8,
             "source_fragment" : "hdrs.ipv4.ttl = hdrs.ipv4.ttl - 1"
           }
@@ -1227,7 +1307,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 281,
+            "line" : 289,
             "column" : 8,
             "source_fragment" : "cmd.flow_ID = flow_ID"
           }
@@ -1253,7 +1333,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 305,
+            "line" : 313,
             "column" : 20,
             "source_fragment" : "cmd.is_ingress_node = 1"
           }
@@ -1279,7 +1359,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 309,
+            "line" : 317,
             "column" : 20,
             "source_fragment" : "cmd.is_egress_node = 1"
           }
@@ -1309,7 +1389,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 313,
+            "line" : 321,
             "column" : 20,
             "source_fragment" : "node_ID.read(cmd.node_ID, 0)"
           }
@@ -1368,7 +1448,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 315,
+            "line" : 323,
             "column" : 20,
             "source_fragment" : "cmd.current_epoch = ..."
           }
@@ -1398,7 +1478,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 327,
+            "line" : 335,
             "column" : 24,
             "source_fragment" : "i_ingress_packets.read(cmd.i_ingress_packets, ..."
           }
@@ -1440,7 +1520,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 329,
+            "line" : 337,
             "column" : 24,
             "source_fragment" : "cmd.i_ingress_packets = cmd.i_ingress_packets + 1"
           }
@@ -1463,7 +1543,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 331,
+            "line" : 339,
             "column" : 24,
             "source_fragment" : "i_ingress_bytes.read(cmd.i_ingress_bytes, ..."
           }
@@ -1505,7 +1585,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 333,
+            "line" : 341,
             "column" : 24,
             "source_fragment" : "cmd.i_ingress_bytes = ..."
           }
@@ -1531,7 +1611,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 336,
+            "line" : 344,
             "column" : 24,
             "source_fragment" : "cmd.i_ingress_packets = 1"
           }
@@ -1550,7 +1630,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 337,
+            "line" : 345,
             "column" : 24,
             "source_fragment" : "cmd.i_ingress_bytes = smd.packet_length"
           }
@@ -1580,7 +1660,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 324,
+            "line" : 332,
             "column" : 20,
             "source_fragment" : "i_epoch.read(cmd.i_last_epoch, cmd.flow_ID)"
           }
@@ -1603,7 +1683,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 325,
+            "line" : 333,
             "column" : 20,
             "source_fragment" : "i_epoch.write(cmd.flow_ID, cmd.current_epoch)"
           }
@@ -1633,7 +1713,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 339,
+            "line" : 347,
             "column" : 20,
             "source_fragment" : "i_ingress_packets.write(cmd.flow_ID, ..."
           }
@@ -1656,7 +1736,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 341,
+            "line" : 349,
             "column" : 20,
             "source_fragment" : "i_ingress_bytes.write(cmd.flow_ID, cmd.i_ingress_bytes)"
           }
@@ -1682,7 +1762,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 345,
+            "line" : 353,
             "column" : 12,
             "source_fragment" : "smd.egress_spec = smd.ingress_port"
           }
@@ -1699,7 +1779,7 @@
           "parameters" : [],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 347,
+            "line" : 355,
             "column" : 12,
             "source_fragment" : "mark_to_drop()"
           }
@@ -1770,7 +1850,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 370,
+            "line" : 382,
             "column" : 8,
             "source_fragment" : "hdrs.ethernet.src_addr = src"
           }
@@ -1789,7 +1869,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 371,
+            "line" : 383,
             "column" : 8,
             "source_fragment" : "hdrs.ethernet.dst_addr = dst"
           }
@@ -1862,7 +1942,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 373,
+            "line" : 385,
             "column" : 12,
             "source_fragment" : "hdrs.arp.op ="
           }
@@ -1905,7 +1985,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 374,
+            "line" : 386,
             "column" : 12,
             "source_fragment" : "hdrs.arp.sender_hw_addr ="
           }
@@ -1948,7 +2028,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 375,
+            "line" : 387,
             "column" : 12,
             "source_fragment" : "bit<48> hw = hdrs.arp.sender_hw_addr;"
           }
@@ -1991,7 +2071,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 376,
+            "line" : 388,
             "column" : 12,
             "source_fragment" : "bit<32> proto = hdrs.arp.sender_proto_addr;"
           }
@@ -2034,7 +2114,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 377,
+            "line" : 389,
             "column" : 12,
             "source_fragment" : "hdrs.arp.sender_hw_addr ="
           }
@@ -2077,7 +2157,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 378,
+            "line" : 390,
             "column" : 12,
             "source_fragment" : "hdrs.arp.target_hw_addr ="
           }
@@ -2120,7 +2200,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 379,
+            "line" : 391,
             "column" : 12,
             "source_fragment" : "hdrs.arp.sender_proto_addr ="
           }
@@ -2163,7 +2243,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 380,
+            "line" : 392,
             "column" : 12,
             "source_fragment" : "hdrs.arp.target_proto_addr ="
           }
@@ -2198,7 +2278,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 397,
+            "line" : 409,
             "column" : 8,
             "source_fragment" : "cmd.qt_timedelta = timedelta"
           }
@@ -2217,7 +2297,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 398,
+            "line" : 410,
             "column" : 8,
             "source_fragment" : "cmd.qt_depth = depth"
           }
@@ -2248,7 +2328,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 412,
+            "line" : 424,
             "column" : 8,
             "source_fragment" : "cmd.qt_bitrate = bitrate"
           }
@@ -2279,7 +2359,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 426,
+            "line" : 438,
             "column" : 8,
             "source_fragment" : "hdrs.telemetry.path_code = new_path_code"
           }
@@ -2310,7 +2390,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 444,
+            "line" : 456,
             "column" : 8,
             "source_fragment" : "cmd.e_check_e2e_delay = 1"
           }
@@ -2329,7 +2409,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 445,
+            "line" : 457,
             "column" : 8,
             "source_fragment" : "cmd.e_e2e_delay_threshold = threshold"
           }
@@ -2360,7 +2440,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 460,
+            "line" : 472,
             "column" : 8,
             "source_fragment" : "cmd.e_check_high_delays = 1"
           }
@@ -2379,7 +2459,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 461,
+            "line" : 473,
             "column" : 8,
             "source_fragment" : "cmd.e_high_delays_threshold = threshold"
           }
@@ -2414,7 +2494,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 476,
+            "line" : 488,
             "column" : 8,
             "source_fragment" : "cmd.e_check_bandwidth_and_drops = 1"
           }
@@ -2433,7 +2513,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 477,
+            "line" : 489,
             "column" : 8,
             "source_fragment" : "cmd.e_bandwidth_threshold = bandwidth"
           }
@@ -2452,7 +2532,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 478,
+            "line" : 490,
             "column" : 8,
             "source_fragment" : "cmd.e_drops_threshold = drops"
           }
@@ -2487,7 +2567,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 493,
+            "line" : 505,
             "column" : 8,
             "source_fragment" : "cmd.e_node_IP_addr = node"
           }
@@ -2506,7 +2586,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 494,
+            "line" : 506,
             "column" : 8,
             "source_fragment" : "cmd.e_analyzer_IP_addr = analyzer"
           }
@@ -2528,7 +2608,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 520,
+            "line" : 532,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.setValid()"
           }
@@ -2547,7 +2627,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 521,
+            "line" : 533,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.epoch = cmd.current_epoch"
           }
@@ -2566,7 +2646,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 522,
+            "line" : 534,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.path_src = cmd.node_ID"
           }
@@ -2585,7 +2665,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 523,
+            "line" : 535,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.path_length = 0"
           }
@@ -2604,7 +2684,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 524,
+            "line" : 536,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.path_code = 0"
           }
@@ -2623,7 +2703,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 525,
+            "line" : 537,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.e2e_delay = 20"
           }
@@ -2642,7 +2722,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 526,
+            "line" : 538,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.ingress_packets = cmd.i_ingress_packets"
           }
@@ -2661,7 +2741,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 527,
+            "line" : 539,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.ingress_bytes = cmd.i_ingress_bytes"
           }
@@ -2680,7 +2760,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 528,
+            "line" : 540,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.contention_points = 0"
           }
@@ -2699,7 +2779,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 529,
+            "line" : 541,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.loop_identifier = 0"
           }
@@ -2718,7 +2798,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 530,
+            "line" : 542,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.loop_detected = 0"
           }
@@ -2737,7 +2817,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 531,
+            "line" : 543,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.next_header = hdrs.ipv4.protocol"
           }
@@ -2756,7 +2836,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 533,
+            "line" : 545,
             "column" : 20,
             "source_fragment" : "hdrs.ipv4.protocol = 223"
           }
@@ -2798,7 +2878,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 534,
+            "line" : 546,
             "column" : 20,
             "source_fragment" : "hdrs.ipv4.total_length = hdrs.ipv4.total_length ..."
           }
@@ -2867,7 +2947,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 543,
+            "line" : 555,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.e2e_delay = ..."
           }
@@ -2926,7 +3006,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 552,
+            "line" : 564,
             "column" : 24,
             "source_fragment" : "hdrs.telemetry.contention_points = ..."
           }
@@ -2985,7 +3065,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 560,
+            "line" : 572,
             "column" : 24,
             "source_fragment" : "hdrs.telemetry.suspicion_points = ..."
           }
@@ -3011,9 +3091,28 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 575,
+            "line" : 596,
             "column" : 24,
             "source_fragment" : "hdrs.telemetry.loop_detected = 0x1"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["telemetry", "loop_identifier"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "custom_metadata_t.cmp"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "intsight.p4",
+            "line" : 597,
+            "column" : 24,
+            "source_fragment" : "hdrs.telemetry.loop_identifier = cmd.cmp"
           }
         },
         {
@@ -3030,28 +3129,9 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 576,
+            "line" : 598,
             "column" : 24,
             "source_fragment" : "cmd.report_type = 0x1"
-          }
-        },
-        {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["scalars", "custom_metadata_t.e_loop_identifier"]
-            },
-            {
-              "type" : "field",
-              "value" : ["telemetry", "loop_identifier"]
-            }
-          ],
-          "source_info" : {
-            "filename" : "intsight.p4",
-            "line" : 577,
-            "column" : 24,
-            "source_fragment" : "cmd.e_loop_identifier = hdrs.telemetry.loop_identifier"
           }
         },
         {
@@ -3082,58 +3162,15 @@
               "value" : ["telemetry", "loop_identifier"]
             },
             {
-              "type" : "expression",
-              "value" : {
-                "type" : "expression",
-                "value" : {
-                  "op" : "|",
-                  "left" : {
-                    "type" : "field",
-                    "value" : ["telemetry", "loop_identifier"]
-                  },
-                  "right" : {
-                    "type" : "expression",
-                    "value" : {
-                      "op" : "&",
-                      "left" : {
-                        "type" : "expression",
-                        "value" : {
-                          "op" : "<<",
-                          "left" : {
-                            "type" : "hexstr",
-                            "value" : "0x0001"
-                          },
-                          "right" : {
-                            "type" : "expression",
-                            "value" : {
-                              "op" : "&",
-                              "left" : {
-                                "type" : "field",
-                                "value" : ["scalars", "custom_metadata_t.node_ID"]
-                              },
-                              "right" : {
-                                "type" : "hexstr",
-                                "value" : "0xff"
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "right" : {
-                        "type" : "hexstr",
-                        "value" : "0xffff"
-                      }
-                    }
-                  }
-                }
-              }
+              "type" : "field",
+              "value" : ["scalars", "custom_metadata_t.cmp"]
             }
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 571,
+            "line" : 601,
             "column" : 22,
-            "source_fragment" : "hdrs.telemetry.loop_identifier ..."
+            "source_fragment" : "hdrs.telemetry.loop_identifier = cmd.cmp"
           }
         }
       ]
@@ -3180,7 +3217,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 566,
+            "line" : 578,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.path_length = ..."
           }
@@ -3219,8 +3256,28 @@
                             "value" : {
                               "op" : "&",
                               "left" : {
-                                "type" : "field",
-                                "value" : ["scalars", "custom_metadata_t.node_ID"]
+                                "type" : "expression",
+                                "value" : {
+                                  "op" : "<<",
+                                  "left" : {
+                                    "type" : "expression",
+                                    "value" : {
+                                      "op" : "&",
+                                      "left" : {
+                                        "type" : "field",
+                                        "value" : ["scalars", "custom_metadata_t.node_ID"]
+                                      },
+                                      "right" : {
+                                        "type" : "hexstr",
+                                        "value" : "0xff"
+                                      }
+                                    }
+                                  },
+                                  "right" : {
+                                    "type" : "hexstr",
+                                    "value" : "0x2"
+                                  }
+                                }
                               },
                               "right" : {
                                 "type" : "hexstr",
@@ -3242,9 +3299,143 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 570,
+            "line" : 584,
             "column" : 20,
             "source_fragment" : "cmd.cmp = ..."
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "custom_metadata_t.aux"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "egress.contador"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "intsight.p4",
+            "line" : 589,
+            "column" : 20,
+            "source_fragment" : "contador.read(cmd.aux, 0)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "egress.help_me"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "custom_metadata_t.aux"]
+            },
+            {
+              "type" : "field",
+              "value" : ["telemetry", "loop_identifier"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "intsight.p4",
+            "line" : 590,
+            "column" : 20,
+            "source_fragment" : "help_me.write(cmd.aux, hdrs.telemetry.loop_identifier)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "egress.help_me_shift"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "custom_metadata_t.aux"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "custom_metadata_t.cmp"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "intsight.p4",
+            "line" : 591,
+            "column" : 20,
+            "source_fragment" : "help_me_shift.write(cmd.aux, cmd.cmp)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "custom_metadata_t.aux"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "custom_metadata_t.aux"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x00000001"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "intsight.p4",
+            "line" : 592,
+            "column" : 20,
+            "source_fragment" : "cmd.aux = cmd.aux + 1"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "egress.contador"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "custom_metadata_t.aux"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "intsight.p4",
+            "line" : 593,
+            "column" : 20,
+            "source_fragment" : "contador.write(0, cmd.aux)"
           }
         }
       ]
@@ -3291,7 +3482,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 589,
+            "line" : 610,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.e2e_delay = hdrs.telemetry.e2e_delay + 60"
           }
@@ -3317,7 +3508,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 604,
+            "line" : 625,
             "column" : 24,
             "source_fragment" : "cmd.e_high_e2e_delay = 1"
           }
@@ -3343,7 +3534,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 606,
+            "line" : 627,
             "column" : 24,
             "source_fragment" : "cmd.e_high_e2e_delay = 0"
           }
@@ -3399,7 +3590,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 637,
+            "line" : 658,
             "column" : 24,
             "source_fragment" : "e_high_delays.write(cmd.flow_ID, ..."
           }
@@ -3465,7 +3656,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 643,
+            "line" : 664,
             "column" : 24,
             "source_fragment" : "e_high_delays.write(cmd.flow_ID, cmd.e_high_delays + 1)"
           }
@@ -3495,7 +3686,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 613,
+            "line" : 634,
             "column" : 20,
             "source_fragment" : "e_epoch.read(cmd.e_epoch, cmd.flow_ID)"
           }
@@ -3518,7 +3709,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 614,
+            "line" : 635,
             "column" : 20,
             "source_fragment" : "e_epoch.write(cmd.flow_ID, hdrs.telemetry.epoch)"
           }
@@ -3541,7 +3732,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 617,
+            "line" : 638,
             "column" : 20,
             "source_fragment" : "e_egress_epoch.read(cmd.e_egress_epoch, cmd.flow_ID)"
           }
@@ -3663,7 +3854,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 618,
+            "line" : 639,
             "column" : 20,
             "source_fragment" : "cmd.e_new_egress_epoch = (bit<32>) ((smd.ingress_global_timestamp + (bit<48>) smd.deq_timedelta + 110 + 60) >> 16)"
           }
@@ -3802,7 +3993,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 619,
+            "line" : 640,
             "column" : 20,
             "source_fragment" : "e_egress_epoch.write(cmd.flow_ID, cmd.e_new_egress_epoch)"
           }
@@ -3825,7 +4016,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 623,
+            "line" : 644,
             "column" : 20,
             "source_fragment" : "e_path_src.read(cmd.e_path_src, cmd.flow_ID)"
           }
@@ -3848,7 +4039,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 624,
+            "line" : 645,
             "column" : 20,
             "source_fragment" : "e_path_src.write(cmd.flow_ID, hdrs.telemetry.path_src)"
           }
@@ -3871,7 +4062,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 625,
+            "line" : 646,
             "column" : 20,
             "source_fragment" : "e_path_length.read(cmd.e_path_length, cmd.flow_ID)"
           }
@@ -3894,7 +4085,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 626,
+            "line" : 647,
             "column" : 20,
             "source_fragment" : "e_path_length.write(cmd.flow_ID, ..."
           }
@@ -3917,7 +4108,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 628,
+            "line" : 649,
             "column" : 20,
             "source_fragment" : "e_path_code.read(cmd.e_path_code, cmd.flow_ID)"
           }
@@ -3940,7 +4131,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 629,
+            "line" : 650,
             "column" : 20,
             "source_fragment" : "e_path_code.write(cmd.flow_ID, hdrs.telemetry.path_code)"
           }
@@ -3963,7 +4154,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 632,
+            "line" : 653,
             "column" : 20,
             "source_fragment" : "e_high_delays.read(cmd.e_high_delays, cmd.flow_ID)"
           }
@@ -3993,7 +4184,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 660,
+            "line" : 681,
             "column" : 24,
             "source_fragment" : "e_egress_packets.write(cmd.flow_ID, 1)"
           }
@@ -4059,7 +4250,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 663,
+            "line" : 684,
             "column" : 24,
             "source_fragment" : "e_egress_packets.write(cmd.flow_ID, ..."
           }
@@ -4089,7 +4280,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 649,
+            "line" : 670,
             "column" : 20,
             "source_fragment" : "e_ingress_packets.read(cmd.e_ingress_packets, cmd.flow_ID)"
           }
@@ -4112,7 +4303,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 650,
+            "line" : 671,
             "column" : 20,
             "source_fragment" : "e_ingress_packets.write(cmd.flow_ID, ..."
           }
@@ -4135,7 +4326,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 652,
+            "line" : 673,
             "column" : 20,
             "source_fragment" : "e_ingress_bytes.read(cmd.e_ingress_bytes, cmd.flow_ID)"
           }
@@ -4158,7 +4349,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 653,
+            "line" : 674,
             "column" : 20,
             "source_fragment" : "e_ingress_bytes.write(cmd.flow_ID, ..."
           }
@@ -4181,7 +4372,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 657,
+            "line" : 678,
             "column" : 20,
             "source_fragment" : "e_egress_packets.read(cmd.e_egress_packets, cmd.flow_ID)"
           }
@@ -4207,7 +4398,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 669,
+            "line" : 690,
             "column" : 24,
             "source_fragment" : "cmd.e_egress_bytes_ths = 0"
           }
@@ -4233,7 +4424,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 671,
+            "line" : 692,
             "column" : 24,
             "source_fragment" : "cmd.e_egress_bytes_ths = 36"
           }
@@ -4263,7 +4454,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 667,
+            "line" : 688,
             "column" : 20,
             "source_fragment" : "e_egress_bytes.read(cmd.e_egress_bytes, cmd.flow_ID)"
           }
@@ -4329,7 +4520,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 676,
+            "line" : 697,
             "column" : 24,
             "source_fragment" : "e_egress_bytes.write(cmd.flow_ID, ..."
           }
@@ -4415,7 +4606,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 681,
+            "line" : 702,
             "column" : 24,
             "source_fragment" : "e_egress_bytes.write(cmd.flow_ID, ..."
           }
@@ -4445,7 +4636,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 695,
+            "line" : 716,
             "column" : 24,
             "source_fragment" : "e_contention_points.write( ..."
           }
@@ -4501,7 +4692,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 702,
+            "line" : 723,
             "column" : 24,
             "source_fragment" : "e_contention_points.write( ..."
           }
@@ -4531,7 +4722,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 690,
+            "line" : 711,
             "column" : 20,
             "source_fragment" : "e_contention_points.read(cmd.e_contention_points, ..."
           }
@@ -4561,7 +4752,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 717,
+            "line" : 738,
             "column" : 24,
             "source_fragment" : "e_suspicion_points.write( ..."
           }
@@ -4617,7 +4808,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 724,
+            "line" : 745,
             "column" : 24,
             "source_fragment" : "e_suspicion_points.write( ..."
           }
@@ -4647,7 +4838,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 712,
+            "line" : 733,
             "column" : 20,
             "source_fragment" : "e_suspicion_points.read(cmd.e_suspicion_points, ..."
           }
@@ -4673,7 +4864,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 736,
+            "line" : 757,
             "column" : 24,
             "source_fragment" : "cmd.e_report = 1"
           }
@@ -4699,7 +4890,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 743,
+            "line" : 764,
             "column" : 28,
             "source_fragment" : "cmd.e_report = 1"
           }
@@ -4725,7 +4916,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 754,
+            "line" : 775,
             "column" : 28,
             "source_fragment" : "cmd.e_report = 1"
           }
@@ -4774,7 +4965,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 748,
+            "line" : 769,
             "column" : 24,
             "source_fragment" : "cmd.e_drops = cmd.e_ingress_packets ..."
           }
@@ -4800,7 +4991,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 759,
+            "line" : 780,
             "column" : 28,
             "source_fragment" : "cmd.e_report = 1"
           }
@@ -4826,7 +5017,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 764,
+            "line" : 785,
             "column" : 28,
             "source_fragment" : "cmd.e_report = 1"
           }
@@ -4872,7 +5063,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 776,
+            "line" : 797,
             "column" : 20,
             "source_fragment" : "hdrs.ipv4.protocol = hdrs.telemetry.next_header"
           }
@@ -4914,7 +5105,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 777,
+            "line" : 798,
             "column" : 20,
             "source_fragment" : "hdrs.ipv4.total_length = ..."
           }
@@ -4929,7 +5120,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 779,
+            "line" : 800,
             "column" : 20,
             "source_fragment" : "hdrs.telemetry.setInvalid()"
           }
@@ -4951,7 +5142,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 784,
+            "line" : 805,
             "column" : 17,
             "source_fragment" : "hdrs.report.setValid()"
           }
@@ -4970,7 +5161,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 785,
+            "line" : 806,
             "column" : 17,
             "source_fragment" : "hdrs.report.epoch = cmd.e_epoch"
           }
@@ -4989,7 +5180,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 786,
+            "line" : 807,
             "column" : 17,
             "source_fragment" : "hdrs.report.egress_epoch = cmd.e_egress_epoch"
           }
@@ -5008,7 +5199,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 787,
+            "line" : 808,
             "column" : 17,
             "source_fragment" : "hdrs.report.flow_ID = cmd.flow_ID"
           }
@@ -5027,7 +5218,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 788,
+            "line" : 809,
             "column" : 17,
             "source_fragment" : "hdrs.report.path_src = cmd.e_path_src"
           }
@@ -5046,7 +5237,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 789,
+            "line" : 810,
             "column" : 17,
             "source_fragment" : "hdrs.report.path_length = cmd.e_path_length"
           }
@@ -5065,7 +5256,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 790,
+            "line" : 811,
             "column" : 17,
             "source_fragment" : "hdrs.report.path_code = cmd.e_path_code"
           }
@@ -5084,7 +5275,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 791,
+            "line" : 812,
             "column" : 17,
             "source_fragment" : "hdrs.report.contention_points = cmd.e_contention_points"
           }
@@ -5103,7 +5294,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 792,
+            "line" : 813,
             "column" : 17,
             "source_fragment" : "hdrs.report.suspicion_points = cmd.e_suspicion_points"
           }
@@ -5135,7 +5326,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 793,
+            "line" : 814,
             "column" : 17,
             "source_fragment" : "hdrs.report.path_dst = (bit<16>) cmd.node_ID"
           }
@@ -5154,7 +5345,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 794,
+            "line" : 815,
             "column" : 17,
             "source_fragment" : "hdrs.report.high_delays = cmd.e_high_delays"
           }
@@ -5173,7 +5364,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 795,
+            "line" : 816,
             "column" : 17,
             "source_fragment" : "hdrs.report.drops = cmd.e_drops"
           }
@@ -5192,7 +5383,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 796,
+            "line" : 817,
             "column" : 17,
             "source_fragment" : "hdrs.report.ingress_packets = cmd.e_ingress_packets"
           }
@@ -5211,7 +5402,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 797,
+            "line" : 818,
             "column" : 17,
             "source_fragment" : "hdrs.report.ingress_bytes = cmd.e_ingress_bytes"
           }
@@ -5230,7 +5421,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 798,
+            "line" : 819,
             "column" : 17,
             "source_fragment" : "hdrs.report.egress_packets = cmd.e_egress_packets"
           }
@@ -5249,7 +5440,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 799,
+            "line" : 820,
             "column" : 17,
             "source_fragment" : "hdrs.report.egress_bytes = cmd.e_egress_bytes"
           }
@@ -5268,7 +5459,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 802,
+            "line" : 823,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.ihl = 5"
           }
@@ -5287,7 +5478,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 803,
+            "line" : 824,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.dscp = 42"
           }
@@ -5306,7 +5497,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 804,
+            "line" : 825,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.ecn = 0"
           }
@@ -5325,7 +5516,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 805,
+            "line" : 826,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.total_length = 20 + 54"
           }
@@ -5344,7 +5535,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 806,
+            "line" : 827,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.identification = 1"
           }
@@ -5363,7 +5554,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 807,
+            "line" : 828,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.flags = 0"
           }
@@ -5382,7 +5573,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 808,
+            "line" : 829,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.fragment_offset = 0"
           }
@@ -5401,7 +5592,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 809,
+            "line" : 830,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.ttl = 64"
           }
@@ -5420,7 +5611,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 810,
+            "line" : 831,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.protocol = 224"
           }
@@ -5439,7 +5630,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 811,
+            "line" : 832,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.header_checksum = 0"
           }
@@ -5461,7 +5652,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 814,
+            "line" : 835,
             "column" : 17,
             "source_fragment" : "hdrs.loop_report.setValid()"
           }
@@ -5480,7 +5671,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 815,
+            "line" : 836,
             "column" : 17,
             "source_fragment" : "hdrs.loop_report.epoch = cmd.e_epoch"
           }
@@ -5499,7 +5690,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 816,
+            "line" : 837,
             "column" : 17,
             "source_fragment" : "hdrs.loop_report.flow_ID = cmd.flow_ID"
           }
@@ -5518,7 +5709,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 817,
+            "line" : 838,
             "column" : 17,
             "source_fragment" : "hdrs.loop_report.path_src = cmd.e_path_src"
           }
@@ -5537,7 +5728,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 818,
+            "line" : 839,
             "column" : 17,
             "source_fragment" : "hdrs.loop_report.path_length = cmd.e_path_length"
           }
@@ -5556,7 +5747,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 819,
+            "line" : 840,
             "column" : 17,
             "source_fragment" : "hdrs.loop_report.path_code = cmd.e_path_code"
           }
@@ -5575,8 +5766,28 @@
                 "value" : {
                   "op" : "&",
                   "left" : {
-                    "type" : "field",
-                    "value" : ["scalars", "custom_metadata_t.node_ID"]
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "<<",
+                          "left" : {
+                            "type" : "field",
+                            "value" : ["scalars", "custom_metadata_t.node_ID"]
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x2"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x03ff"
+                      }
+                    }
                   },
                   "right" : {
                     "type" : "hexstr",
@@ -5588,9 +5799,9 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 820,
+            "line" : 841,
             "column" : 17,
-            "source_fragment" : "hdrs.loop_report.node_ID = (bit<8>) cmd.node_ID"
+            "source_fragment" : "hdrs.loop_report.node_ID = (bit<8>) (cmd.node_ID << 2)"
           }
         },
         {
@@ -5607,7 +5818,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 821,
+            "line" : 842,
             "column" : 17,
             "source_fragment" : "hdrs.loop_report.loop_identifier = cmd.e_loop_identifier"
           }
@@ -5626,7 +5837,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 824,
+            "line" : 846,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.ihl = 5"
           }
@@ -5645,7 +5856,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 825,
+            "line" : 847,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.dscp = 42"
           }
@@ -5664,7 +5875,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 826,
+            "line" : 848,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.ecn = 0"
           }
@@ -5683,7 +5894,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 827,
+            "line" : 849,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.total_length = 20 + 15"
           }
@@ -5702,7 +5913,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 828,
+            "line" : 850,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.identification = 1"
           }
@@ -5721,7 +5932,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 829,
+            "line" : 851,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.flags = 0"
           }
@@ -5740,7 +5951,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 830,
+            "line" : 852,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.fragment_offset = 0"
           }
@@ -5759,7 +5970,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 831,
+            "line" : 853,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.ttl = 64"
           }
@@ -5778,7 +5989,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 832,
+            "line" : 854,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.protocol = 225"
           }
@@ -5797,7 +6008,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 833,
+            "line" : 855,
             "column" : 17,
             "source_fragment" : "hdrs.ipv4.header_checksum = 0"
           }
@@ -5855,7 +6066,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 837,
+            "line" : 859,
             "column" : 13,
             "source_fragment" : "hdrs.ipv4.src_addr = cmd.e_node_IP_addr"
           }
@@ -5874,7 +6085,7 @@
           ],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 838,
+            "line" : 860,
             "column" : 13,
             "source_fragment" : "hdrs.ipv4.dst_addr = cmd.e_analyzer_IP_addr"
           }
@@ -5891,7 +6102,7 @@
           "parameters" : [],
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 850,
+            "line" : 872,
             "column" : 12,
             "source_fragment" : "mark_to_drop()"
           }
@@ -5905,7 +6116,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 248,
+        "line" : 256,
         "column" : 8,
         "source_fragment" : "ingress"
       },
@@ -5916,7 +6127,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 268,
+            "line" : 276,
             "column" : 10,
             "source_fragment" : "ipv4_lpm"
           },
@@ -6023,7 +6234,7 @@
           "id" : 4,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 284,
+            "line" : 292,
             "column" : 10,
             "source_fragment" : "flow_ID"
           },
@@ -6229,7 +6440,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 300,
+            "line" : 308,
             "column" : 12,
             "source_fragment" : "hdrs.ipv4.isValid()"
           },
@@ -6252,7 +6463,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 303,
+            "line" : 311,
             "column" : 15,
             "source_fragment" : "smd.egress_spec != 0 && !hdrs.report.isValid()"
           },
@@ -6302,7 +6513,7 @@
           "id" : 2,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 304,
+            "line" : 312,
             "column" : 19,
             "source_fragment" : "smd.ingress_port <= 2"
           },
@@ -6328,7 +6539,7 @@
           "id" : 3,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 307,
+            "line" : 315,
             "column" : 19,
             "source_fragment" : "smd.egress_spec <= 2"
           },
@@ -6354,7 +6565,7 @@
           "id" : 4,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 312,
+            "line" : 320,
             "column" : 19,
             "source_fragment" : "cmd.is_ingress_node == 1 || cmd.is_egress_node == 1"
           },
@@ -6400,7 +6611,7 @@
           "id" : 5,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 322,
+            "line" : 330,
             "column" : 19,
             "source_fragment" : "!hdrs.telemetry.isValid() && cmd.is_ingress_node == 1"
           },
@@ -6450,7 +6661,7 @@
           "id" : 6,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 326,
+            "line" : 334,
             "column" : 23,
             "source_fragment" : "cmd.i_last_epoch == cmd.current_epoch"
           },
@@ -6476,7 +6687,7 @@
           "id" : 7,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 344,
+            "line" : 352,
             "column" : 18,
             "source_fragment" : "hdrs.arp.isValid()"
           },
@@ -6501,7 +6712,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "intsight.p4",
-        "line" : 352,
+        "line" : 360,
         "column" : 8,
         "source_fragment" : "egress"
       },
@@ -6512,7 +6723,7 @@
           "id" : 12,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 385,
+            "line" : 397,
             "column" : 10,
             "source_fragment" : "mac_addrs"
           },
@@ -6595,7 +6806,7 @@
           "id" : 15,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 401,
+            "line" : 413,
             "column" : 10,
             "source_fragment" : "contention_thresholds"
           },
@@ -6654,7 +6865,7 @@
           "id" : 17,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 415,
+            "line" : 427,
             "column" : 10,
             "source_fragment" : "suspicion_thresholds"
           },
@@ -6713,7 +6924,7 @@
           "id" : 19,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 429,
+            "line" : 441,
             "column" : 10,
             "source_fragment" : "update_path_ID"
           },
@@ -6860,7 +7071,7 @@
           "id" : 24,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 448,
+            "line" : 460,
             "column" : 10,
             "source_fragment" : "e2e_delay_threshold"
           },
@@ -7357,7 +7568,7 @@
           "id" : 45,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 464,
+            "line" : 476,
             "column" : 10,
             "source_fragment" : "high_delays_threshold"
           },
@@ -7417,7 +7628,7 @@
           "id" : 47,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 481,
+            "line" : 493,
             "column" : 10,
             "source_fragment" : "bandwidth_thresholds"
           },
@@ -7638,7 +7849,7 @@
           "id" : 56,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 497,
+            "line" : 509,
             "column" : 10,
             "source_fragment" : "node_and_analyzer_IP_addr"
           },
@@ -7763,7 +7974,7 @@
           "id" : 8,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 509,
+            "line" : 521,
             "column" : 11,
             "source_fragment" : "smd.egress_port != 0"
           },
@@ -7789,7 +8000,7 @@
           "id" : 9,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 513,
+            "line" : 525,
             "column" : 15,
             "source_fragment" : "smd.instance_type == 0 && !hdrs.report.isValid() ..."
           },
@@ -7863,7 +8074,7 @@
           "id" : 10,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 518,
+            "line" : 530,
             "column" : 19,
             "source_fragment" : "!hdrs.telemetry.isValid() && cmd.is_ingress_node == 1"
           },
@@ -7913,7 +8124,7 @@
           "id" : 11,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 541,
+            "line" : 553,
             "column" : 19,
             "source_fragment" : "hdrs.telemetry.isValid()"
           },
@@ -7936,7 +8147,7 @@
           "id" : 12,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 549,
+            "line" : 561,
             "column" : 23,
             "source_fragment" : "smd.deq_timedelta >= cmd.qt_timedelta ..."
           },
@@ -7982,7 +8193,7 @@
           "id" : 13,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 558,
+            "line" : 570,
             "column" : 23,
             "source_fragment" : "hdrs.telemetry.ingress_bytes >= cmd.qt_bitrate"
           },
@@ -8008,7 +8219,7 @@
           "id" : 14,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 574,
+            "line" : 595,
             "column" : 23,
             "source_fragment" : "hdrs.telemetry.loop_identifier == cmd.cmp && hdrs.telemetry.loop_detected == 0x0"
           },
@@ -8025,48 +8236,8 @@
                     "value" : ["telemetry", "loop_identifier"]
                   },
                   "right" : {
-                    "type" : "expression",
-                    "value" : {
-                      "op" : "|",
-                      "left" : {
-                        "type" : "field",
-                        "value" : ["telemetry", "loop_identifier"]
-                      },
-                      "right" : {
-                        "type" : "expression",
-                        "value" : {
-                          "op" : "&",
-                          "left" : {
-                            "type" : "expression",
-                            "value" : {
-                              "op" : "<<",
-                              "left" : {
-                                "type" : "hexstr",
-                                "value" : "0x0001"
-                              },
-                              "right" : {
-                                "type" : "expression",
-                                "value" : {
-                                  "op" : "&",
-                                  "left" : {
-                                    "type" : "field",
-                                    "value" : ["scalars", "custom_metadata_t.node_ID"]
-                                  },
-                                  "right" : {
-                                    "type" : "hexstr",
-                                    "value" : "0xff"
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          "right" : {
-                            "type" : "hexstr",
-                            "value" : "0xffff"
-                          }
-                        }
-                      }
-                    }
+                    "type" : "field",
+                    "value" : ["scalars", "custom_metadata_t.cmp"]
                   }
                 }
               },
@@ -8094,7 +8265,7 @@
           "id" : 15,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 587,
+            "line" : 608,
             "column" : 19,
             "source_fragment" : "hdrs.telemetry.isValid() && cmd.is_egress_node == 1"
           },
@@ -8137,7 +8308,7 @@
           "id" : 16,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 601,
+            "line" : 622,
             "column" : 23,
             "source_fragment" : "cmd.e_check_e2e_delay == 1 ..."
           },
@@ -8183,7 +8354,7 @@
           "id" : 17,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 633,
+            "line" : 654,
             "column" : 23,
             "source_fragment" : "hdrs.telemetry.epoch != cmd.e_epoch"
           },
@@ -8209,7 +8380,7 @@
           "id" : 18,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 639,
+            "line" : 660,
             "column" : 30,
             "source_fragment" : "cmd.e_high_e2e_delay == 1"
           },
@@ -8235,7 +8406,7 @@
           "id" : 19,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 658,
+            "line" : 679,
             "column" : 23,
             "source_fragment" : "hdrs.telemetry.epoch != cmd.e_epoch"
           },
@@ -8261,7 +8432,7 @@
           "id" : 20,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 668,
+            "line" : 689,
             "column" : 23,
             "source_fragment" : "cmd.is_ingress_node == 1"
           },
@@ -8287,7 +8458,7 @@
           "id" : 21,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 674,
+            "line" : 695,
             "column" : 23,
             "source_fragment" : "hdrs.telemetry.epoch != cmd.e_epoch"
           },
@@ -8313,7 +8484,7 @@
           "id" : 22,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 692,
+            "line" : 713,
             "column" : 23,
             "source_fragment" : "hdrs.telemetry.epoch != cmd.e_epoch"
           },
@@ -8339,7 +8510,7 @@
           "id" : 23,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 714,
+            "line" : 735,
             "column" : 23,
             "source_fragment" : "hdrs.telemetry.epoch != cmd.e_epoch"
           },
@@ -8365,7 +8536,7 @@
           "id" : 24,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 734,
+            "line" : 755,
             "column" : 23,
             "source_fragment" : "hdrs.telemetry.epoch ..."
           },
@@ -8411,7 +8582,7 @@
           "id" : 25,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 740,
+            "line" : 761,
             "column" : 27,
             "source_fragment" : "cmd.e_check_high_delays == 1 ..."
           },
@@ -8457,7 +8628,7 @@
           "id" : 26,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 750,
+            "line" : 771,
             "column" : 27,
             "source_fragment" : "cmd.e_check_bandwidth_and_drops == 1 ..."
           },
@@ -8543,7 +8714,7 @@
           "id" : 27,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 758,
+            "line" : 779,
             "column" : 27,
             "source_fragment" : "cmd.e_contention_points > 0"
           },
@@ -8569,7 +8740,7 @@
           "id" : 28,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 763,
+            "line" : 784,
             "column" : 27,
             "source_fragment" : "cmd.e_suspicion_points > 0"
           },
@@ -8595,7 +8766,7 @@
           "id" : 29,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 768,
+            "line" : 789,
             "column" : 27,
             "source_fragment" : "cmd.e_report == 1"
           },
@@ -8621,7 +8792,7 @@
           "id" : 30,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 781,
+            "line" : 802,
             "column" : 22,
             "source_fragment" : "smd.instance_type == 2"
           },
@@ -8647,7 +8818,7 @@
           "id" : 31,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 782,
+            "line" : 803,
             "column" : 17,
             "source_fragment" : "cmd.report_type == 0x0"
           },
@@ -8673,7 +8844,7 @@
           "id" : 32,
           "source_info" : {
             "filename" : "intsight.p4",
-            "line" : 840,
+            "line" : 862,
             "column" : 16,
             "source_fragment" : "cmd.report_type == 0x0"
           },

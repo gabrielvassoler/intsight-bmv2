@@ -5,7 +5,7 @@ Adding interface s2-eth3 as port 3
 Adding interface s2-eth4 as port 4
 Adding interface s2-eth5 as port 5
 Adding interface s2-eth6 as port 6
-I0405 23:49:35.322628700    7490 server_builder.cc:247]      Synchronous server. Num CQs: 1, Min pollers: 1, Max Pollers: 2147483647, CQ timeout (msec): 1000
+I0407 22:05:49.039496149   28883 server_builder.cc:247]      Synchronous server. Num CQs: 1, Min pollers: 1, Max Pollers: 2147483647, CQ timeout (msec): 1000
 Server listening on 0.0.0.0:50053
 Thrift server was started
 New connection
@@ -292,7 +292,7 @@ updates {
       match {
         field_id: 1
         lpm {
-          value: "\n\000\004\000"
+          value: "\n\000\006\000"
           prefix_len: 24
         }
       }
@@ -321,7 +321,7 @@ updates {
       match {
         field_id: 1
         lpm {
-          value: "\n\000\003\000"
+          value: "\n\000\004\000"
           prefix_len: 24
         }
       }
@@ -330,7 +330,7 @@ updates {
           action_id: 16785927
           params {
             param_id: 1
-            value: "\000\005"
+            value: "\000\006"
           }
         }
       }
@@ -437,35 +437,6 @@ updates {
       match {
         field_id: 1
         lpm {
-          value: "\n\000\005\000"
-          prefix_len: 24
-        }
-      }
-      action {
-        action {
-          action_id: 16785927
-          params {
-            param_id: 1
-            value: "\000\005"
-          }
-        }
-      }
-    }
-  }
-}
-P4Runtime Write
-device_id: 2
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33593274
-      match {
-        field_id: 1
-        lpm {
           value: "\n\000\007\000"
           prefix_len: 24
         }
@@ -475,36 +446,7 @@ updates {
           action_id: 16785927
           params {
             param_id: 1
-            value: "\000\006"
-          }
-        }
-      }
-    }
-  }
-}
-P4Runtime Write
-device_id: 2
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33593274
-      match {
-        field_id: 1
-        lpm {
-          value: "\n\000\006\000"
-          prefix_len: 24
-        }
-      }
-      action {
-        action {
-          action_id: 16785927
-          params {
-            param_id: 1
-            value: "\000\006"
+            value: "\000\005"
           }
         }
       }
@@ -559,6 +501,64 @@ updates {
           params {
             param_id: 1
             value: "\000\003"
+          }
+        }
+      }
+    }
+  }
+}
+P4Runtime Write
+device_id: 2
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33593274
+      match {
+        field_id: 1
+        lpm {
+          value: "\n\000\003\000"
+          prefix_len: 24
+        }
+      }
+      action {
+        action {
+          action_id: 16785927
+          params {
+            param_id: 1
+            value: "\000\005"
+          }
+        }
+      }
+    }
+  }
+}
+P4Runtime Write
+device_id: 2
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33593274
+      match {
+        field_id: 1
+        lpm {
+          value: "\n\000\005\000"
+          prefix_len: 24
+        }
+      }
+      action {
+        action {
+          action_id: 16785927
+          params {
+            param_id: 1
+            value: "\000\005"
           }
         }
       }
@@ -2137,22 +2137,4 @@ election_id {
 updates {
   type: INSERT
   entity {
-    table_enopen: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
+    table_en

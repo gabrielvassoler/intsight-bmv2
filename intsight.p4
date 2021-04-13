@@ -144,6 +144,7 @@ struct custom_metadata_t {
     bit<32>  e_analyzer_IP_addr;
     bit<16>  cmp;
     bit<1>   report_type;
+    bit<32>  aux;
 }
 
 ////////////////////////////////////////////////////////////////
@@ -373,6 +374,10 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
     register<bit<32>>(REGWID)  e_egress_packets;
     register<bit<32>>(REGWID)  e_egress_bytes;
 
+    register<bit<16>>(1024)    help_me;
+    register<bit<16>>(1024)    help_me_shift;
+    register<bit<32>>(1)       contador;
+
     action rewrite_mac_addrs(bit<48> src, bit<48> dst) {
         hdrs.ethernet.src_addr = src;
         hdrs.ethernet.dst_addr = dst;
@@ -573,15 +578,24 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                     hdrs.telemetry.path_length =
                         hdrs.telemetry.path_length + 1;
 
+
                     // LOOP?
-                    cmd.cmp = \
+
+                    cmd.cmp =
                       hdrs.telemetry.loop_identifier
-                      | ((bit<16>) 1) << ((bit<8>) cmd.node_ID);
+                      | ((bit<16>) 1) << ((bit<8>) cmd.node_ID << 2);
+
+                    //DEBUG
+                    contador.read(cmd.aux, 0);
+                    help_me.write(cmd.aux, hdrs.telemetry.loop_identifier);
+                    help_me_shift.write(cmd.aux, cmd.cmp);
+                    cmd.aux = cmd.aux + 1;
+                    contador.write(0, cmd.aux);
 
                     if(hdrs.telemetry.loop_identifier == cmd.cmp && hdrs.telemetry.loop_detected == 0x0){
                         hdrs.telemetry.loop_detected = 0x1;
+                        hdrs.telemetry.loop_identifier = cmd.cmp;
                         cmd.report_type = 0x1;
-                        cmd.e_loop_identifier = hdrs.telemetry.loop_identifier;
                         clone3(CloneType.E2E, INTSIGHT_MIRROR_SESSION, {cmd});
                     }else{
                       hdrs.telemetry.loop_identifier = cmd.cmp;
@@ -824,8 +838,9 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
                  hdrs.loop_report.path_src = cmd.e_path_src;
                  hdrs.loop_report.path_length = cmd.e_path_length;
                  hdrs.loop_report.path_code = cmd.e_path_code;
-                 hdrs.loop_report.node_ID = (bit<8>) cmd.node_ID;
+                 hdrs.loop_report.node_ID = (bit<8>) (cmd.node_ID << 2);
                  hdrs.loop_report.loop_identifier = cmd.e_loop_identifier;
+
 
                  // Rewrite IPv4 header to transform packet into a report.
                  hdrs.ipv4.ihl = 5;
@@ -889,9 +904,9 @@ control DeparserImpl(packet_out pkt, in headers hdrs) {
         pkt.emit(hdrs.ethernet);
         pkt.emit(hdrs.arp);
         pkt.emit(hdrs.ipv4);
+        pkt.emit(hdrs.loop_report);
         pkt.emit(hdrs.telemetry);
         pkt.emit(hdrs.report);
-        pkt.emit(hdrs.loop_report);
     }
 }
 

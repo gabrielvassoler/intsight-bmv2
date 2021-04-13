@@ -242,9 +242,9 @@ class ExerciseRunner:
         with open('/tmp/intsight_flag', 'w') as f:
             f.write('1')
         is_receiver.wait()
-        
+
         # stop right after the CLI is exited
-        self.net.stop()
+        #self.net.stop()
 
 
     def parse_links(self, unparsed_links):
@@ -452,4 +452,3 @@ if __name__ == '__main__':
                               args.quiet, args.username)
 
     exercise.run_exercise()
-

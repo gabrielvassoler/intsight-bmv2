@@ -1,10 +1,10 @@
 
-[2021-04-05 23:49:42.826] /p4.P4Runtime/SetForwardingPipelineConfig
+[2021-04-07 22:06:06.057] /p4.P4Runtime/SetForwardingPipelineConfig
 ---
-Message too long (283169 bytes)! Skipping log...
+Message too long (287927 bytes)! Skipping log...
 ---
 
-[2021-04-05 23:49:42.936] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.300] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -39,7 +39,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:42.942] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.310] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -74,7 +74,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:42.952] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.318] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -109,7 +109,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:42.953] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.329] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -139,7 +139,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:42.956] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.340] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -169,7 +169,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:42.958] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.362] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -195,7 +195,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:42.975] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.370] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -230,7 +230,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:42.977] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.397] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -265,131 +265,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:42.981] /p4.P4Runtime/Write
----
-device_id: 5
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33593274
-      match {
-        field_id: 1
-        lpm {
-          value: "\n\000\005\t"
-          prefix_len: 32
-        }
-      }
-      action {
-        action {
-          action_id: 16785927
-          params {
-            param_id: 1
-            value: "\000\001"
-          }
-        }
-      }
-    }
-  }
-}
----
-
-[2021-04-05 23:49:42.985] /p4.P4Runtime/Write
----
-device_id: 5
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33593274
-      match {
-        field_id: 1
-        lpm {
-          value: "\n\000\005\n"
-          prefix_len: 32
-        }
-      }
-      action {
-        action {
-          action_id: 16785927
-          params {
-            param_id: 1
-            value: "\000\002"
-          }
-        }
-      }
-    }
-  }
-}
----
-
-[2021-04-05 23:49:42.989] /p4.P4Runtime/Write
----
-device_id: 5
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33593274
-      match {
-        field_id: 1
-        lpm {
-          value: "\n\000\005\000"
-          prefix_len: 24
-        }
-      }
-      action {
-        action {
-          action_id: 16832181
-        }
-      }
-    }
-  }
-}
----
-
-[2021-04-05 23:49:42.993] /p4.P4Runtime/Write
----
-device_id: 5
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33593274
-      match {
-        field_id: 1
-        lpm {
-          value: "\n\000\000\000"
-          prefix_len: 24
-        }
-      }
-      action {
-        action {
-          action_id: 16785927
-          params {
-            param_id: 1
-            value: "\000\003"
-          }
-        }
-      }
-    }
-  }
-}
----
-
-[2021-04-05 23:49:42.995] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.401] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -421,7 +297,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:42.999] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.415] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -453,71 +329,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.002] /p4.P4Runtime/Write
----
-device_id: 5
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33593274
-      match {
-        field_id: 1
-        lpm {
-          value: "\n\000\006\000"
-          prefix_len: 24
-        }
-      }
-      action {
-        action {
-          action_id: 16785927
-          params {
-            param_id: 1
-            value: "\000\005"
-          }
-        }
-      }
-    }
-  }
-}
----
-
-[2021-04-05 23:49:43.019] /p4.P4Runtime/Write
----
-device_id: 5
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33593274
-      match {
-        field_id: 1
-        lpm {
-          value: "\n\000\002\000"
-          prefix_len: 24
-        }
-      }
-      action {
-        action {
-          action_id: 16785927
-          params {
-            param_id: 1
-            value: "\000\004"
-          }
-        }
-      }
-    }
-  }
-}
----
-
-[2021-04-05 23:49:43.029] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.464] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -549,7 +361,195 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.034] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.535] /p4.P4Runtime/Write
+---
+device_id: 5
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33593274
+      match {
+        field_id: 1
+        lpm {
+          value: "\n\000\002\000"
+          prefix_len: 24
+        }
+      }
+      action {
+        action {
+          action_id: 16785927
+          params {
+            param_id: 1
+            value: "\000\004"
+          }
+        }
+      }
+    }
+  }
+}
+---
+
+[2021-04-07 22:06:06.583] /p4.P4Runtime/Write
+---
+device_id: 5
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33593274
+      match {
+        field_id: 1
+        lpm {
+          value: "\n\000\005\t"
+          prefix_len: 32
+        }
+      }
+      action {
+        action {
+          action_id: 16785927
+          params {
+            param_id: 1
+            value: "\000\001"
+          }
+        }
+      }
+    }
+  }
+}
+---
+
+[2021-04-07 22:06:06.612] /p4.P4Runtime/Write
+---
+device_id: 5
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33593274
+      match {
+        field_id: 1
+        lpm {
+          value: "\n\000\005\n"
+          prefix_len: 32
+        }
+      }
+      action {
+        action {
+          action_id: 16785927
+          params {
+            param_id: 1
+            value: "\000\002"
+          }
+        }
+      }
+    }
+  }
+}
+---
+
+[2021-04-07 22:06:06.661] /p4.P4Runtime/Write
+---
+device_id: 5
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33593274
+      match {
+        field_id: 1
+        lpm {
+          value: "\n\000\006\000"
+          prefix_len: 24
+        }
+      }
+      action {
+        action {
+          action_id: 16785927
+          params {
+            param_id: 1
+            value: "\000\005"
+          }
+        }
+      }
+    }
+  }
+}
+---
+
+[2021-04-07 22:06:06.704] /p4.P4Runtime/Write
+---
+device_id: 5
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33593274
+      match {
+        field_id: 1
+        lpm {
+          value: "\n\000\005\000"
+          prefix_len: 24
+        }
+      }
+      action {
+        action {
+          action_id: 16832181
+        }
+      }
+    }
+  }
+}
+---
+
+[2021-04-07 22:06:06.801] /p4.P4Runtime/Write
+---
+device_id: 5
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33593274
+      match {
+        field_id: 1
+        lpm {
+          value: "\n\000\000\000"
+          prefix_len: 24
+        }
+      }
+      action {
+        action {
+          action_id: 16785927
+          params {
+            param_id: 1
+            value: "\000\003"
+          }
+        }
+      }
+    }
+  }
+}
+---
+
+[2021-04-07 22:06:06.888] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -581,7 +581,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.053] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.901] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -618,7 +618,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.060] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.945] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -655,7 +655,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.092] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.950] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -692,7 +692,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.095] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.957] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -729,7 +729,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.108] /p4.P4Runtime/Write
+[2021-04-07 22:06:06.979] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -766,7 +766,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.120] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.073] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -803,7 +803,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.126] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.101] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -840,7 +840,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.148] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.117] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -877,7 +877,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.155] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.171] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -914,7 +914,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.164] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.217] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -951,7 +951,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.171] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.270] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -988,7 +988,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.174] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.281] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1025,7 +1025,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.176] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.334] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1062,7 +1062,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.182] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.350] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1099,7 +1099,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.186] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.368] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1136,7 +1136,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.191] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.407] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1173,7 +1173,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.194] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.441] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1210,7 +1210,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.199] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.489] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1247,7 +1247,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.204] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.493] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1284,7 +1284,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.211] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.506] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1321,7 +1321,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.221] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.520] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1358,7 +1358,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.242] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.534] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1395,7 +1395,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.246] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.552] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1432,7 +1432,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.256] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.561] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1469,7 +1469,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.260] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.595] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1506,7 +1506,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.280] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.602] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1543,7 +1543,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.285] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.649] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1580,7 +1580,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.295] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.687] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1617,7 +1617,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.298] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.717] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1654,7 +1654,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.302] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.722] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1691,7 +1691,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.305] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.735] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1728,7 +1728,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.311] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.766] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1765,7 +1765,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.320] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.782] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1802,7 +1802,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.327] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.789] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1839,7 +1839,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.331] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.796] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1876,7 +1876,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.335] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.815] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1913,7 +1913,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.338] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.853] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1950,7 +1950,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.344] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.874] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -1987,7 +1987,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.348] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.903] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2024,7 +2024,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.355] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.910] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2061,7 +2061,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.358] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.924] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2098,7 +2098,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.364] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.939] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2135,7 +2135,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.366] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.943] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2172,7 +2172,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.371] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.950] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2209,7 +2209,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.376] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.984] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2246,7 +2246,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.383] /p4.P4Runtime/Write
+[2021-04-07 22:06:07.993] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2283,7 +2283,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.395] /p4.P4Runtime/Write
+[2021-04-07 22:06:08.005] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2320,7 +2320,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.399] /p4.P4Runtime/Write
+[2021-04-07 22:06:08.044] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2357,7 +2357,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.401] /p4.P4Runtime/Write
+[2021-04-07 22:06:08.074] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
@@ -2394,7 +2394,7 @@ updates {
 }
 ---
 
-[2021-04-05 23:49:43.404] /p4.P4Runtime/Write
+[2021-04-07 22:06:08.113] /p4.P4Runtime/Write
 ---
 device_id: 5
 election_id {
