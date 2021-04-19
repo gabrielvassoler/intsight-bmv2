@@ -305,7 +305,7 @@ control ingress(inout headers hdrs, inout custom_metadata_t cmd,
     ////////          INGRESS PIPELINE APPLY BLOCK         ////////
     ///////////////////////////////////////////////////////////////
     apply {
-        if (hdrs.ipv4.isValid()) {
+        if (hdrs.ipv4.isValid() && hdrs.ipv4.ttl > 0) {
             ipv4_lpm.apply();
 
             if(smd.egress_spec != 0 && !hdrs.report.isValid()) {
@@ -316,6 +316,8 @@ control ingress(inout headers hdrs, inout custom_metadata_t cmd,
                     // implicit that it is greater than 0 by the outer if
                     cmd.is_egress_node = 1;
                 }
+
+                node_ID.read(cmd.node_ID, 0);
 
                 if(cmd.is_ingress_node == 1 || cmd.is_egress_node == 1) {
                     node_ID.read(cmd.node_ID, 0);
@@ -376,7 +378,15 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
 
     register<bit<16>>(1024)    help_me;
     register<bit<16>>(1024)    help_me_shift;
+    register<bit<16>>(1024)    in1;
+    register<bit<16>>(1024)    in2;
+    register<bit<10>>(1024)    b4;
+    register<bit<8>>(1024)     after;
     register<bit<32>>(1)       contador;
+    register<bit<32>>(1)       contador1;
+    register<bit<32>>(1)       contador2;
+    register<bit<32>>(1024)    epoch;
+    
 
     action rewrite_mac_addrs(bit<48> src, bit<48> dst) {
         hdrs.ethernet.src_addr = src;
@@ -580,22 +590,35 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
 
 
                     // LOOP?
-
+                    
                     cmd.cmp =
                       hdrs.telemetry.loop_identifier
-                      | ((bit<16>) 1) << ((bit<8>) cmd.node_ID << 2);
+                      | ((bit<16>) 1) << ((bit<8>) cmd.node_ID);
 
                     //DEBUG
                     contador.read(cmd.aux, 0);
                     help_me.write(cmd.aux, hdrs.telemetry.loop_identifier);
+                    b4.write(cmd.aux, cmd.node_ID);
+                    after.write(cmd.aux, (bit<8>) cmd.node_ID);
                     help_me_shift.write(cmd.aux, cmd.cmp);
                     cmd.aux = cmd.aux + 1;
                     contador.write(0, cmd.aux);
 
                     if(hdrs.telemetry.loop_identifier == cmd.cmp && hdrs.telemetry.loop_detected == 0x0){
+                        contador1.read(cmd.aux, 0);
+                        in1.write(cmd.aux, hdrs.telemetry.loop_identifier);
+                        in2.write(cmd.aux, cmd.cmp);
+                        cmd.aux = cmd.aux + 1;
+                        contador1.write(0, cmd.aux);
                         hdrs.telemetry.loop_detected = 0x1;
                         hdrs.telemetry.loop_identifier = cmd.cmp;
                         cmd.report_type = 0x1;
+                        cmd.e_epoch = hdrs.telemetry.epoch;
+                        //cmd.flow_ID = hdrs.telemetry.flow_ID;
+                        cmd.e_path_src = hdrs.telemetry.path_src;
+                        cmd.e_path_length = hdrs.telemetry.path_length;
+                        cmd.e_path_code = hdrs.telemetry.path_code;
+                        cmd.e_loop_identifier = hdrs.telemetry.loop_identifier;
                         clone3(CloneType.E2E, INTSIGHT_MIRROR_SESSION, {cmd});
                     }else{
                       hdrs.telemetry.loop_identifier = cmd.cmp;
@@ -833,12 +856,16 @@ control egress(inout headers hdrs, inout custom_metadata_t cmd,
 
              }else{
                  hdrs.loop_report.setValid();
+                 contador2.read(cmd.aux, 0);
+                 epoch.write(cmd.aux, cmd.e_epoch);
+                 cmd.aux = cmd.aux + 1;
+                 contador2.write(0, cmd.aux);
                  hdrs.loop_report.epoch = cmd.e_epoch;
                  hdrs.loop_report.flow_ID = cmd.flow_ID;
                  hdrs.loop_report.path_src = cmd.e_path_src;
                  hdrs.loop_report.path_length = cmd.e_path_length;
                  hdrs.loop_report.path_code = cmd.e_path_code;
-                 hdrs.loop_report.node_ID = (bit<8>) (cmd.node_ID << 2);
+                 hdrs.loop_report.node_ID = (bit<8>) (cmd.node_ID);
                  hdrs.loop_report.loop_identifier = cmd.e_loop_identifier;
 
 

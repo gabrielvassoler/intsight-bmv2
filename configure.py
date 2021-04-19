@@ -300,20 +300,22 @@ def main(net_file):
     })
 
     #CREATING LOOP FOR TEST PURPOSES
-    li = [['s1', 's4', 's2'], ['s2', 's4', 's3'], ['s3', 's4', 's1']]
+    li = [['s1', 'h7', 's2'], ['s2', 'h7', 's3'], ['s3', 'h7', 's1']]
 
-    #for u, dst, v in li:
-     #   routing_entries[u][dst] = nodes[u]['adj'].index(v) + 1
-      #  table_entries[u].append({
-       #     "table": "ingress.ipv4_lpm",
-        #    "match": {
-         #       "hdrs.ipv4.dst_addr": [nodes[dst]['ip'], 24]
-          #  },
-           # "action_name": "ingress.ipv4_forward",
-            #"action_params": {
-             #   "port": nodes[u]['adj'].index(v) + 1
-            #}
-        #})
+    for u, dst, v in li:
+       routing_entries[u][dst] = nodes[u]['adj'].index(v) + 1
+       table_entries[u].append({
+           "table": "ingress.ipv4_lpm",
+           "match": {
+               "hdrs.ipv4.dst_addr": [hosts[dst]['ip'], 32]
+           },
+           "action_name": "ingress.ipv4_forward",
+            "action_params": {
+               "port": nodes[u]['adj'].index(v) + 1
+            }
+        })
+
+    #print(hosts, [nodes['s4']['ip'], 24] )
 
     for src, paths in shortest_paths.items():
         for h in range(hosts_per_switch):
@@ -369,7 +371,7 @@ def main(net_file):
                         })
                     else:
                         if routing_entries[u][dst] != nodes[u]['adj'].index(v) + 1:
-                            print('Skipping routing from {} to {}, entry already exists (loop test).'.format(u, dst))
+                            print('error!')
 
     # flow IDs
     last_flow_ID = {}

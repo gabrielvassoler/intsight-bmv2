@@ -234,8 +234,8 @@ class ExerciseRunner:
 
         if self.run_workload:
             mallard.run_workload(self.net, self.workload_file)
-        else:
-            self.do_net_cli()
+        #else:
+        self.do_net_cli()
 
         # stop intsight receiver
         # print 'Exiting'
@@ -244,7 +244,7 @@ class ExerciseRunner:
         is_receiver.wait()
 
         # stop right after the CLI is exited
-        #self.net.stop()
+        self.net.stop()
 
 
     def parse_links(self, unparsed_links):
