@@ -1,18 +1,18 @@
 {
     "table_entries": [
         {
+            "table": "ingress.ipv4_lpm",
+            "action_name": "ingress.drop",
             "action_params": {},
             "match": {
                 "hdrs.ipv4.dst_addr": [
                     "10.0.0.0",
                     24
                 ]
-            },
-            "action_name": "ingress.drop",
-            "table": "ingress.ipv4_lpm"
+            }
         }
     ],
+    "p4info": "build/intsight.p4info",
     "target": "bmv2",
-    "bmv2_json": "build/intsight.json",
-    "p4info": "build/intsight.p4info"
+    "bmv2_json": "build/intsight.json"
 }

@@ -1,0 +1,54 @@
+{
+    "tcpreplay": [
+        {
+            "start_delay": 0,
+            "duration": 15,
+            "sender": "h1",
+            "sender_opt": "--preload-pcap --stats=1 ../resources/workloads/waypoint/red.pcp",
+            "sender_log": "red-s-h1-h11.txt",
+            "receiver": "h11",
+            "receiver_opt": "10.0.6.11 1234",
+            "receiver_log": "red-r-h1-h11.txt"
+        },
+        {
+            "start_delay": 0,
+            "duration": 15,
+            "sender": "h12",
+            "sender_opt": "--preload-pcap --stats=1 ../resources/workloads/waypoint/black.pcp",
+            "sender_log": "black-s-h12-h2.txt",
+            "receiver": "h2",
+            "receiver_opt": "10.0.1.2 1234",
+            "receiver_log": "black-r-h12-h2.txt"
+        },
+        {
+            "start_delay": 0,
+            "duration": 15,
+            "sender": "h3",
+            "sender_opt": "--preload-pcap --stats=1 ../resources/workloads/waypoint/purple.pcp",
+            "sender_log": "purple-s-h3-h10.txt",
+            "receiver": "h10",
+            "receiver_opt": "10.0.5.10 1234",
+            "receiver_log": "purple-r-h3-h10.txt"
+        },
+        {
+            "start_delay": 0,
+            "duration": 15,
+            "sender": "h6",
+            "sender_opt": "--preload-pcap --stats=1 ../resources/workloads/waypoint/green.pcp",
+            "sender_log": "green-s-h6-h12.txt",
+            "receiver": "h12",
+            "receiver_opt": "10.0.6.12 1235",
+            "receiver_log": "green-r-h6-h12.txt"
+        },
+        {
+            "start_delay": 0,
+            "duration": 15,
+            "sender": "h7",
+            "sender_opt": "--preload-pcap --stats=1 ../resources/workloads/waypoint/orange.pcp",
+            "sender_log": "orange-s-h7-h5.txt",
+            "receiver": "h5",
+            "receiver_opt": "10.0.3.5 1234",
+            "receiver_log": "orange-r-h7-h5.txt"
+        }
+    ]
+}

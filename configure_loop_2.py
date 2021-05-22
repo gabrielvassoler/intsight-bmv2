@@ -300,20 +300,20 @@ def main(net_file):
     })
 
     # #CREATING LOOP FOR TEST PURPOSES
-    # li = [['s1', 'h7', 's2'], ['s2', 'h7', 's3'], ['s3', 'h7', 's1']]
-    #
-    # for u, dst, v in li:
-    #    routing_entries[u][dst] = nodes[u]['adj'].index(v) + 1
-    #    table_entries[u].append({
-    #        "table": "ingress.ipv4_lpm",
-    #        "match": {
-    #            "hdrs.ipv4.dst_addr": [hosts[dst]['ip'], 32]
-    #        },
-    #        "action_name": "ingress.ipv4_forward",
-    #         "action_params": {
-    #            "port": nodes[u]['adj'].index(v) + 1
-    #         }
-    #     })
+    li = [['s1', 'h11', 's2'], ['s2', 'h11', 's3'], ['s3', 'h11', 's1']]
+
+    for u, dst, v in li:
+       routing_entries[u][dst] = nodes[u]['adj'].index(v) + 1
+       table_entries[u].append({
+           "table": "ingress.ipv4_lpm",
+           "match": {
+               "hdrs.ipv4.dst_addr": [hosts[dst]['ip'], 32]
+           },
+           "action_name": "ingress.ipv4_forward",
+            "action_params": {
+               "port": nodes[u]['adj'].index(v) + 1
+            }
+        })
 
     #ENFORCING PATHS FOR THE FLOWS
     li = [['s1', 'h11', 's2'], ['s2', 'h11', 's4'], ['s4', 'h11', 's6']]

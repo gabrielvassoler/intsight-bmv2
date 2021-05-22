@@ -14,6 +14,11 @@ from scapy.all import ShortField, IntField, BitField
 from scapy.all import IP, TCP, UDP, Raw
 from scapy.all import bind_layers
 
+stop = 0
+
+def current_mili():
+    return round(time.time() * 1000)
+
 
 class IntSight_Report(Packet):
     name = "IntSight_Report"
@@ -138,7 +143,13 @@ class PacketSniffer(threading.Thread):
                 f.write('{}\n'.format(repr(pkt[IntSight_Report])))
             with open(self.log_filename + '.csv', 'a') as f:
                 f.write('{}\n'.format(pkt[IntSight_Report].csv()))
+            print(pkt[IntSight_Report].path_src)
         if Loop_Report in pkt:
+            if(stop == 0):
+                stop = 1
+                fil = open('time.txt', 'a')
+                fil.write(current_mili())
+                fil.close()
             with open(self.log_loop_filename + '.txt', 'a') as f:
                 f.write('{}\n'.format(repr(pkt[Loop_Report])))
             with open(self.log_loop_filename + '.csv', 'a') as f:
