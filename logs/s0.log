@@ -5,20 +5,4 @@ Adding interface s0-eth3 as port 3
 Adding interface s0-eth4 as port 4
 Adding interface s0-eth5 as port 5
 Adding interface s0-eth6 as port 6
-I0523 02:44:03.175018164   11404 server_builder.cc:247]      Synchronous server. Num CQs: 1, Min pollers: 1, Max Pollers: 2147483647, CQ timeout (msec): 1000
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
-open: No such file or directory
+I0522 23:59:53.994999285   23218 server_builder.cc:247]      Synchronous server. Num CQs: 1, Min pollers: 1, Max Pollers: 2147483647, CQ timeout (msec): 1000

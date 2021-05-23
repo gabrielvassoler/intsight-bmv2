@@ -1,0 +1,366 @@
+tables {
+  preamble {
+    id: 33593274
+    name: "ingress.ipv4_lpm"
+    alias: "ipv4_lpm"
+  }
+  match_fields {
+    id: 1
+    name: "hdrs.ipv4.dst_addr"
+    bitwidth: 32
+    match_type: LPM
+  }
+  action_refs {
+    id: 16785927
+  }
+  action_refs {
+    id: 16832181
+  }
+  action_refs {
+    id: 16800567
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33590794
+    name: "ingress.flow_ID"
+    alias: "flow_ID"
+  }
+  match_fields {
+    id: 1
+    name: "hdrs.ipv4.src_addr"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  match_fields {
+    id: 2
+    name: "hdrs.ipv4.dst_addr"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16824682
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33556778
+    name: "egress.mac_addrs"
+    alias: "mac_addrs"
+  }
+  match_fields {
+    id: 1
+    name: "smd.egress_port"
+    bitwidth: 9
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16800567
+  }
+  action_refs {
+    id: 16783177
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33590557
+    name: "egress.contention_thresholds"
+    alias: "contention_thresholds"
+  }
+  match_fields {
+    id: 1
+    name: "smd.egress_port"
+    bitwidth: 9
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16799681
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33563172
+    name: "egress.suspicion_thresholds"
+    alias: "suspicion_thresholds"
+  }
+  match_fields {
+    id: 1
+    name: "smd.egress_port"
+    bitwidth: 9
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16828881
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33572910
+    name: "egress.update_path_ID"
+    alias: "update_path_ID"
+  }
+  match_fields {
+    id: 1
+    name: "hdrs.telemetry.path_src"
+    bitwidth: 10
+    match_type: EXACT
+  }
+  match_fields {
+    id: 2
+    name: "hdrs.telemetry.path_length"
+    bitwidth: 6
+    match_type: EXACT
+  }
+  match_fields {
+    id: 3
+    name: "hdrs.telemetry.path_code"
+    bitwidth: 16
+    match_type: EXACT
+  }
+  match_fields {
+    id: 4
+    name: "smd.egress_port"
+    bitwidth: 9
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16821657
+  }
+  action_refs {
+    id: 16800567
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33591602
+    name: "egress.e2e_delay_threshold"
+    alias: "e2e_delay_threshold"
+  }
+  match_fields {
+    id: 1
+    name: "cmd.flow_ID"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16810665
+  }
+  action_refs {
+    id: 16800567
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33618024
+    name: "egress.high_delays_threshold"
+    alias: "high_delays_threshold"
+  }
+  match_fields {
+    id: 1
+    name: "cmd.flow_ID"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16813376
+  }
+  action_refs {
+    id: 16800567
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33567183
+    name: "egress.bandwidth_thresholds"
+    alias: "bandwidth_thresholds"
+  }
+  match_fields {
+    id: 1
+    name: "cmd.flow_ID"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16778154
+  }
+  action_refs {
+    id: 16800567
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33598323
+    name: "egress.node_and_analyzer_IP_addr"
+    alias: "node_and_analyzer_IP_addr"
+  }
+  action_refs {
+    id: 16839549
+  }
+  action_refs {
+    id: 16800567
+  }
+  size: 1024
+}
+actions {
+  preamble {
+    id: 16800567
+    name: "NoAction"
+    alias: "NoAction"
+  }
+}
+actions {
+  preamble {
+    id: 16832181
+    name: "ingress.drop"
+    alias: "drop"
+  }
+}
+actions {
+  preamble {
+    id: 16785927
+    name: "ingress.ipv4_forward"
+    alias: "ipv4_forward"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+}
+actions {
+  preamble {
+    id: 16824682
+    name: "ingress.set_flow_ID"
+    alias: "set_flow_ID"
+  }
+  params {
+    id: 1
+    name: "flow_ID"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16783177
+    name: "egress.rewrite_mac_addrs"
+    alias: "rewrite_mac_addrs"
+  }
+  params {
+    id: 1
+    name: "src"
+    bitwidth: 48
+  }
+  params {
+    id: 2
+    name: "dst"
+    bitwidth: 48
+  }
+}
+actions {
+  preamble {
+    id: 16799681
+    name: "egress.set_contention_thresholds"
+    alias: "set_contention_thresholds"
+  }
+  params {
+    id: 1
+    name: "timedelta"
+    bitwidth: 32
+  }
+  params {
+    id: 2
+    name: "depth"
+    bitwidth: 19
+  }
+}
+actions {
+  preamble {
+    id: 16828881
+    name: "egress.set_suspicion_thresholds"
+    alias: "set_suspicion_thresholds"
+  }
+  params {
+    id: 1
+    name: "bitrate"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16821657
+    name: "egress.set_path_ID"
+    alias: "set_path_ID"
+  }
+  params {
+    id: 1
+    name: "new_path_code"
+    bitwidth: 16
+  }
+}
+actions {
+  preamble {
+    id: 16810665
+    name: "egress.set_e2e_delay_threshold"
+    alias: "set_e2e_delay_threshold"
+  }
+  params {
+    id: 1
+    name: "threshold"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16813376
+    name: "egress.set_high_delays_threshold"
+    alias: "set_high_delays_threshold"
+  }
+  params {
+    id: 1
+    name: "threshold"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16778154
+    name: "egress.set_bandwidth_thresholds"
+    alias: "set_bandwidth_thresholds"
+  }
+  params {
+    id: 1
+    name: "bandwidth"
+    bitwidth: 32
+  }
+  params {
+    id: 2
+    name: "drops"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16839549
+    name: "egress.set_node_and_analyzer_IP_addr"
+    alias: "set_node_and_analyzer_IP_addr"
+  }
+  params {
+    id: 1
+    name: "node"
+    bitwidth: 32
+  }
+  params {
+    id: 2
+    name: "analyzer"
+    bitwidth: 32
+  }
+}

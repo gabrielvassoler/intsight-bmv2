@@ -1,47 +1,31 @@
 {
-    "workload_file": "experiments/waypoint/workload.json",
-    "run_workload": true,
-    "hosts": [
-        "h7",
-        "h12",
-        "h5",
-        "h1",
-        "h9",
-        "h4",
-        "h6",
-        "h11",
-        "h8",
-        "h3",
-        "h2",
-        "h10"
-    ],
     "switches": {
-        "s0": {
-            "runtime_json": "s0-runtime.json"
-        },
-        "s4": {
-            "runtime_json": "s4-runtime.json",
-            "cli_input": "s4-cli.txt"
+        "s5": {
+            "runtime_json": "s5-runtime.json",
+            "cli_input": "s5-cli.txt"
         },
         "s1": {
             "runtime_json": "s1-runtime.json",
             "cli_input": "s1-cli.txt"
         },
-        "s5": {
-            "runtime_json": "s5-runtime.json",
-            "cli_input": "s5-cli.txt"
+        "s2": {
+            "runtime_json": "s2-runtime.json",
+            "cli_input": "s2-cli.txt"
         },
         "s3": {
             "runtime_json": "s3-runtime.json",
             "cli_input": "s3-cli.txt"
         },
+        "s4": {
+            "runtime_json": "s4-runtime.json",
+            "cli_input": "s4-cli.txt"
+        },
         "s6": {
             "runtime_json": "s6-runtime.json",
             "cli_input": "s6-cli.txt"
         },
-        "s2": {
-            "runtime_json": "s2-runtime.json",
-            "cli_input": "s2-cli.txt"
+        "s0": {
+            "runtime_json": "s0-runtime.json"
         }
     },
     "capture_traffic": false,
@@ -214,5 +198,21 @@
             "0us",
             100
         ]
+    ],
+    "workload_file": "experiments/waypoint/workload.json",
+    "run_workload": true,
+    "hosts": [
+        "h8",
+        "h2",
+        "h12",
+        "h11",
+        "h9",
+        "h5",
+        "h10",
+        "h1",
+        "h4",
+        "h6",
+        "h7",
+        "h3"
     ]
 }
