@@ -51,18 +51,18 @@ def gen_pkts(src_addr, dst_addr, src_port, dst_port, yfunc, lorem, seconds, msgl
         x = x + noise*delay
         # count pkts
         i = i + 1
-        if i%1000 == 0:
-            print(i, end='', flush=True)
-        elif i%100 == 0:
-            print(end='.', flush=True)
-    print('done', flush=True)
+        # if i%1000 == 0:
+        #     print(i, end='', flush=True)
+        # elif i%100 == 0:
+        #     print(end='.', flush=True)
+    print('done')
     return pkts
 
 def main():
-    print('Building random string', end='...', flush=True)
+    print('Building random string')
     letters = string.ascii_letters + string.digits
     lorem = ''.join(random.choice(letters) for i in range(int(1e6)))
-    print('done', flush=True)
+    print('done')
 
     seconds = 15.0
     maxframesize = 1518 - 4  # Frame Check Sequence
@@ -70,37 +70,37 @@ def main():
     tellen = 36  # IntSight
     msglen = maxframesize - hdslen - tellen
 
-    os.makedirs('../../../resources/workloads/waypoint', exist_ok=True)
+    os.makedirs('../../resources/workloads/waypoint')
 
     print('Generating traffic for RED flow (h1-h11)')
     pkts = gen_pkts('10.0.1.1', '10.0.6.11', 1234, 1234, Yred, lorem, seconds, msglen, hdslen)
-    print('Writting traffic to pcap file', end='...', flush=True)
-    wrpcap('../../../resources/workloads/bandwidth/red.pcp', pkts)
-    print('done', flush=True)
+    #print('Writting traffic to pcap file', flush=True)
+    wrpcap('../../resources/workloads/waypoint/red.pcp', pkts)
+    print('done')
 
     print('Generating traffic for BLACK flow (h12-h2)')
     pkts = gen_pkts('10.0.6.12', '10.0.1.2', 1234, 1234, Yblue, lorem, seconds, msglen, hdslen)
-    print('Writting traffic to pcap file', end='...', flush=True)
-    wrpcap('../../../resources/workloads/bandwidth/black.pcp', pkts)
-    print('done', flush=True)
+    print('Writting traffic to pcap file')
+    wrpcap('../../resources/workloads/waypoint/black.pcp', pkts)
+    print('done')
 
     print('Generating traffic for PURPLE flow (h3-h10)')
     pkts = gen_pkts('10.0.2.3', '10.0.5.10', 1234, 1234, Yteal, lorem, seconds, msglen, hdslen)
-    print('Writting traffic to pcap file', end='...', flush=True)
-    wrpcap('../../../resources/workloads/bandwidth/purple.pcp', pkts)
-    print('done', flush=True)
+    print('Writting traffic to pcap file')
+    wrpcap('../../resources/workloads/waypoint/purple.pcp', pkts)
+    print('done')
 
     print('Generating traffic for GREEN flow (h6-h12)')
     pkts = gen_pkts('10.0.3.6', '10.0.6.12', 1235, 1235, Ygreen, lorem, seconds, msglen, hdslen)
-    print('Writting traffic to pcap file', end='...', flush=True)
-    wrpcap('../../../resources/workloads/bandwidth/green.pcp', pkts)
-    print('done', flush=True)
+    print('Writting traffic to pcap file')
+    wrpcap('../../resources/workloads/waypoint/green.pcp', pkts)
+    print('done')
 
     print('Generating traffic for ORANGE flow (h7-h5)')
     pkts = gen_pkts('10.0.4.7', '10.0.3.5', 1234, 1234, Yorange, lorem, seconds, msglen, hdslen)
-    print('Writting traffic to pcap file', end='...', flush=True)
-    wrpcap('../../../resources/workloads/bandwidth/orange.pcp', pkts)
-    print('done', flush=True)
+    print('Writting traffic to pcap file')
+    wrpcap('../../resources/workloads/waypoint/orange.pcp', pkts)
+    print('done')
 
 
 if __name__ == '__main__':

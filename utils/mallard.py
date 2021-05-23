@@ -5,12 +5,20 @@ import os
 import sys
 # import subprocess
 import time
+from datetime import datetime
 
+def current_mili():
+    return datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]
 
 def run_workload(mn, wf):
 
+    fil = open('sender.txt', 'a')
+    fil.write(str(current_mili()))
+    fil.write('\n')
+    fil.close()
     mn.pingAll()
-
+    print(wf)
+    print(os.getcwd())
     with open(wf) as f:
         workload = json.load(f)
 
@@ -26,7 +34,7 @@ def run_workload(mn, wf):
             print('{}$ {}'.format(t['server'], cmd))
             mn.hosts[sidx].cmd(cmd)
             t['server_pid'] = int(mn.hosts[sidx].cmd('echo $!'))
-    
+
     print('Starting tcpreplay receivers')
     if 'tcpreplay' in workload:
         for t in workload['tcpreplay']:
@@ -71,7 +79,7 @@ def run_workload(mn, wf):
             print('{}$ {}'.format(t['client'], cmd))
             mn.hosts[cidx].cmd(cmd)
             t['client_pid'] = int(mn.hosts[cidx].cmd('echo $!'))
-    
+
     print('Starting tcpreplay senders')
     if 'tcpreplay' in workload:
         for t in workload['tcpreplay']:
@@ -85,7 +93,7 @@ def run_workload(mn, wf):
             print('{}$ {}'.format(t['sender'], cmd))
             mn.hosts[sidx].cmd(cmd)
             t['sender_pid'] = int(mn.hosts[sidx].cmd('echo $!'))
-    
+
     # wait for clients to finish
     print('Waiting for iperf3 clients to finish')
     if 'iperf3' in workload:
@@ -101,7 +109,7 @@ def run_workload(mn, wf):
                     sys.stdout.flush()
                     time.sleep(1)
             print()
-    
+
     # wait for tcpreplay senders to finish
     print('Waiting for tcpreplay senders to finish')
     if 'tcpreplay' in workload:
@@ -133,7 +141,7 @@ def run_workload(mn, wf):
                     sys.stdout.flush()
                     time.sleep(1)
             print()
-    
+
 
 
     # wait for servers to finish
@@ -151,7 +159,7 @@ def run_workload(mn, wf):
                     sys.stdout.flush()
                     time.sleep(1)
             print()
-    
+
     # wait for tcpreplay receivers to  finish
     print('Waiting for tcpreplay receivers to finish')
     if 'tcpreplay' in workload:

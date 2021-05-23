@@ -7,6 +7,7 @@ import struct
 import threading
 import time
 from datetime import datetime
+import json
 
 from scapy.all import sniff, sendp, hexdump, get_if_list, get_if_hwaddr
 from scapy.all import Packet
@@ -14,10 +15,43 @@ from scapy.all import ShortField, IntField, BitField
 from scapy.all import IP, TCP, UDP, Raw
 from scapy.all import bind_layers
 
-stop = 0
+#STUFF FOR COLLECTING DATA
+
+# global stop
+# stop = 0
+# f = open('choice.txt', 'r')
+# c = str(f.read())
+# f.close()
+# if c != '-1':
+#     f = open('cases.json', 'r')
+#     a = json.load(f)
+#     wp = a[c]
+#     start = int(wp[0][1])
+#     end = int(wp[1][1])
+#     points = wp[3].split(",")
+#     f.close()
+#     path_id_decoder = 0
+#
+#     f = open('path_ID_decoder.txt', 'r')
+#     g = f.read()
+#     remov = ["'"]
+#     for character in remov:
+#         g = g.replace(character, "\"")
+#     f.close()
+#     f = open('path_ID_decoder.txt', 'w')
+#     f.write(g)
+#     f.close()
+#     f = open('path_ID_decoder.txt', 'r')
+#     path_id_decoder = json.load(f)
+#
+#     path = path_id_decoder[str(wp[0])+','+str(wp[1])+','+str(wp[2])+',0']
+#     f.close()
+
+global pk
+pk = 0
 
 def current_mili():
-    return round(time.time() * 1000)
+    return datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]
 
 
 class IntSight_Report(Packet):
@@ -138,18 +172,31 @@ class PacketSniffer(threading.Thread):
                     'ipkts,epkts,drops,ibytes,ebytes\n')
 
     def log_packet(self, pkt):
+        global stop #, path, start, end, wp, c, path_id_decoder, points
         if IntSight_Report in pkt:
             with open(self.log_filename + '.txt', 'a') as f:
                 f.write('{}\n'.format(repr(pkt[IntSight_Report])))
             with open(self.log_filename + '.csv', 'a') as f:
                 f.write('{}\n'.format(pkt[IntSight_Report].csv()))
-            print(pkt[IntSight_Report].path_src)
+            fil = open('time1.txt', 'a')
+            fil.write(str(current_mili()))
+            fil.write('\n')
+            fil.close()
+            # if c != '-1':
+            #     if start == int(pkt[IntSight_Report].path_src) and end == int(pkt[IntSight_Report].path_dst):
+            #         path = path_id_decoder[str(wp[0])+','+str(wp[1])+','+str(wp[2])+',0']
+            #         #if(stop == 0 and not set(points).issubset(path)): #not necessary right now
+            #         # if(stop == 0):
+            #         #     stop = 1
+            #         fil = open('time.txt', 'a')
+            #         fil.write(str(current_mili()))
+            #         fil.write('\n')
+            #         fil.close()
         if Loop_Report in pkt:
-            if(stop == 0):
-                stop = 1
-                fil = open('time.txt', 'a')
-                fil.write(current_mili())
-                fil.close()
+            fil = open('time.txt', 'a')
+            fil.write(str(current_mili()))
+            fil.write('\n')
+            fil.close()
             with open(self.log_loop_filename + '.txt', 'a') as f:
                 f.write('{}\n'.format(repr(pkt[Loop_Report])))
             with open(self.log_loop_filename + '.csv', 'a') as f:
