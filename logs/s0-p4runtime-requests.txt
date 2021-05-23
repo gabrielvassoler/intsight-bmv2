@@ -1,10 +1,10 @@
 
-[2021-04-07 22:06:00.626] /p4.P4Runtime/SetForwardingPipelineConfig
+[2021-05-23 02:44:08.225] /p4.P4Runtime/SetForwardingPipelineConfig
 ---
-Message too long (287914 bytes)! Skipping log...
+Message too long (303288 bytes)! Skipping log...
 ---
 
-[2021-04-07 22:06:00.900] /p4.P4Runtime/Write
+[2021-05-23 02:44:08.257] /p4.P4Runtime/Write
 ---
 election_id {
   low: 1

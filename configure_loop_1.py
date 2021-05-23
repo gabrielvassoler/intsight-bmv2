@@ -660,7 +660,7 @@ def main(net_file):
                 "cli_input": "{}-cli.txt".format(nid)
             }
 
-    print('building topology.json', end='... ')
+    #print('building topology.json', end='... ')
     with open('topology.json', 'w') as f:
         json.dump(topology_cfg, f, indent=4)
     print('done')
@@ -674,7 +674,7 @@ def main(net_file):
             "bmv2_json": "build/intsight.json",
             "table_entries": table_entries[nid]
         }
-        print('building {}-runtime.json'.format(nid), end='... ')
+        #print('building {}-runtime.json'.format(nid), end='... ')
         with open('{}-runtime.json'.format(nid), 'w') as f:
             json.dump(node_runtime_cfg, f, indent=4)
         print('done')
@@ -686,7 +686,7 @@ def main(net_file):
         node_cli_cfg += "mirroring_add 42 {}\n".format(hosts_per_switch + 1)
         node_cli_cfg += "set_queue_depth {}\n".format(Q_DEPTH)
         node_cli_cfg += "set_queue_rate {}\n".format(Q_RATE)
-        print('building {}-cli.txt'.format(nid), end='... ')
+        #print('building {}-cli.txt'.format(nid), end='... ')
         with open('{}-cli.txt'.format(nid), 'w') as f:
             f.write(node_cli_cfg)
         print('done')
