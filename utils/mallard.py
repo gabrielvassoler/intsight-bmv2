@@ -12,10 +12,15 @@ def current_mili():
 
 def run_workload(mn, wf):
 
+    #VERMON START 
+    #TIMER START
+
     fil = open('sender.txt', 'a')
     fil.write(str(current_mili()))
     fil.write('\n')
     fil.close()
+    
+    #VERMON END
     mn.pingAll()
     print(wf)
     print(os.getcwd())

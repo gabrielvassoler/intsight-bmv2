@@ -15,6 +15,16 @@ from scapy.all import ShortField, IntField, BitField
 from scapy.all import IP, TCP, UDP, Raw
 from scapy.all import bind_layers
 
+import vermon
+
+#VERMON START 
+#VARIABLES
+
+PROPERTIES = {}
+multiPathProperties = []
+
+#VERMON END
+
 #STUFF FOR COLLECTING DATA
 
 # global stop
@@ -47,12 +57,11 @@ from scapy.all import bind_layers
 #     path = path_id_decoder[str(wp[0])+','+str(wp[1])+','+str(wp[2])+',0']
 #     f.close()
 
-global pk
-pk = 0
-
+#VERMON START
+#TIME COLLECTION
 def current_mili():
     return datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]
-
+#VERMON END
 
 class IntSight_Report(Packet):
     name = "IntSight_Report"
@@ -124,6 +133,9 @@ class IntSight_Report(Packet):
             )
         return out
 
+#VERMON START
+#LOOP DETECTION
+
 class Loop_Report(Packet):
     name = "Loop_Report"
     fields_desc = [
@@ -156,6 +168,8 @@ class Loop_Report(Packet):
         )
         return out
 
+#VERMON END
+
 
 class PacketSniffer(threading.Thread):
     def __init__(self, interface):
@@ -172,26 +186,17 @@ class PacketSniffer(threading.Thread):
                     'ipkts,epkts,drops,ibytes,ebytes\n')
 
     def log_packet(self, pkt):
-        global stop #, path, start, end, wp, c, path_id_decoder, points
+        global PROPERTIES
+        global multiPathProperties
+        global path_id_decoder
         if IntSight_Report in pkt:
             with open(self.log_filename + '.txt', 'a') as f:
                 f.write('{}\n'.format(repr(pkt[IntSight_Report])))
             with open(self.log_filename + '.csv', 'a') as f:
                 f.write('{}\n'.format(pkt[IntSight_Report].csv()))
-            fil = open('time1.txt', 'a')
-            fil.write(str(current_mili()))
-            fil.write('\n')
-            fil.close()
-            # if c != '-1':
-            #     if start == int(pkt[IntSight_Report].path_src) and end == int(pkt[IntSight_Report].path_dst):
-            #         path = path_id_decoder[str(wp[0])+','+str(wp[1])+','+str(wp[2])+',0']
-            #         #if(stop == 0 and not set(points).issubset(path)): #not necessary right now
-            #         # if(stop == 0):
-            #         #     stop = 1
-            #         fil = open('time.txt', 'a')
-            #         fil.write(str(current_mili()))
-            #         fil.write('\n')
-            #         fil.close()
+
+            PROPERTIES, multiPathProperties = vermon.check(PROPERTIES, multiPathProperties, path_id_decoder, int(pkt[IntSight_Report].path_length), int(pkt[IntSight_Report].path_code), int(pkt[IntSight_Report].path_dst), int(pkt[IntSight_Report].path_src), int(pkt[IntSight_Report].flow_ID), int(pkt[IntSight_Report].epoch), str(current_mili()))
+
         if Loop_Report in pkt:
             fil = open('time.txt', 'a')
             fil.write(str(current_mili()))
@@ -209,6 +214,15 @@ class PacketSniffer(threading.Thread):
 
 
 def main(n_nodes=5, username=None):
+    global PROPERTIES
+    global multiPathProperties
+    global path_id_decoder
+    #VERMON START
+    #CONFIG
+    print('# VERMON -  Generating configuration variables for this verification    - #')
+    PROPERTIES, multiPathProperties, path_id_decoder = vermon.config()
+    #VERMON END
+    
     bind_layers(IP, IntSight_Report, proto=224)
     bind_layers(IP, Loop_Report, proto=225)
 
