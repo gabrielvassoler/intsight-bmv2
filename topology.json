@@ -1,34 +1,4 @@
 {
-    "switches": {
-        "s5": {
-            "runtime_json": "s5-runtime.json",
-            "cli_input": "s5-cli.txt"
-        },
-        "s1": {
-            "runtime_json": "s1-runtime.json",
-            "cli_input": "s1-cli.txt"
-        },
-        "s2": {
-            "runtime_json": "s2-runtime.json",
-            "cli_input": "s2-cli.txt"
-        },
-        "s3": {
-            "runtime_json": "s3-runtime.json",
-            "cli_input": "s3-cli.txt"
-        },
-        "s4": {
-            "runtime_json": "s4-runtime.json",
-            "cli_input": "s4-cli.txt"
-        },
-        "s6": {
-            "runtime_json": "s6-runtime.json",
-            "cli_input": "s6-cli.txt"
-        },
-        "s0": {
-            "runtime_json": "s0-runtime.json"
-        }
-    },
-    "capture_traffic": false,
     "links": [
         [
             "h1",
@@ -91,18 +61,6 @@
             100
         ],
         [
-            "h11",
-            "s6",
-            "0us",
-            100
-        ],
-        [
-            "h12",
-            "s6",
-            "0us",
-            100
-        ],
-        [
             "s0",
             "s1",
             "0us",
@@ -133,86 +91,68 @@
             100
         ],
         [
-            "s0",
-            "s6",
-            "0us",
-            100
-        ],
-        [
             "s1",
             "s2",
             "0us",
             100
         ],
         [
-            "s1",
-            "s3",
-            "0us",
-            100
-        ],
-        [
             "s2",
             "s3",
             "0us",
             100
         ],
         [
-            "s2",
-            "s4",
-            "0us",
-            100
-        ],
-        [
-            "s2",
-            "s5",
-            "0us",
-            100
-        ],
-        [
             "s3",
             "s4",
             "0us",
             100
         ],
         [
-            "s3",
-            "s5",
-            "0us",
-            100
-        ],
-        [
             "s4",
             "s5",
-            "0us",
-            100
-        ],
-        [
-            "s4",
-            "s6",
-            "0us",
-            100
-        ],
-        [
-            "s5",
-            "s6",
             "0us",
             100
         ]
     ],
-    "workload_file": "experiments/waypoint/workload.json",
-    "run_workload": true,
+    "switches": {
+        "s3": {
+            "runtime_json": "s3-runtime.json",
+            "cli_input": "s3-cli.txt"
+        },
+        "s4": {
+            "runtime_json": "s4-runtime.json",
+            "cli_input": "s4-cli.txt"
+        },
+        "s0": {
+            "runtime_json": "s0-runtime.json"
+        },
+        "s1": {
+            "runtime_json": "s1-runtime.json",
+            "cli_input": "s1-cli.txt"
+        },
+        "s2": {
+            "runtime_json": "s2-runtime.json",
+            "cli_input": "s2-cli.txt"
+        },
+        "s5": {
+            "runtime_json": "s5-runtime.json",
+            "cli_input": "s5-cli.txt"
+        }
+    },
+    "workload_file": "experiments/e2edelay/workload.json",
     "hosts": [
-        "h8",
-        "h2",
-        "h12",
-        "h11",
-        "h9",
-        "h5",
+        "h7",
+        "h4",
         "h10",
         "h1",
-        "h4",
+        "h5",
+        "h2",
         "h6",
-        "h7",
-        "h3"
-    ]
+        "h3",
+        "h9",
+        "h8"
+    ],
+    "capture_traffic": false,
+    "run_workload": true
 }

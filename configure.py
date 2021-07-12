@@ -316,22 +316,22 @@ def main(net_file):
     #     })
 
     #ENFORCING PATHS FOR THE FLOWS
-    li = [['s1', 'h11', 's2'], ['s2', 'h11', 's4'], ['s4', 'h11', 's6']]
-    li += [['s6', 'h2', 's5'], ['s5', 'h2', 's3'], ['s3', 'h2', 's1']]
-    li += [['s2', 'h10', 's5'], ['s4', 'h5', 's3'], ['s3', 'h12', 's5'], ['s5', 'h12', 's6']]
+    #li = [['s1', 'h11', 's2'], ['s2', 'h11', 's4'], ['s4', 'h11', 's6']]
+    #li += [['s6', 'h2', 's5'], ['s5', 'h2', 's3'], ['s3', 'h2', 's1']]
+    #li += [['s2', 'h10', 's5'], ['s4', 'h5', 's3'], ['s3', 'h12', 's5'], ['s5', 'h12', 's6']]
 
-    for u, dst, v in li:
-       routing_entries[u][dst] = nodes[u]['adj'].index(v) + 1
-       table_entries[u].append({
-           "table": "ingress.ipv4_lpm",
-           "match": {
-               "hdrs.ipv4.dst_addr": [hosts[dst]['ip'], 32]
-           },
-           "action_name": "ingress.ipv4_forward",
-            "action_params": {
-               "port": nodes[u]['adj'].index(v) + 1
-            }
-        })
+    #for u, dst, v in li:
+    #   routing_entries[u][dst] = nodes[u]['adj'].index(v) + 1
+    #   table_entries[u].append({
+#           "table": "ingress.ipv4_lpm",
+#           "match": {
+#               "hdrs.ipv4.dst_addr": [hosts[dst]['ip'], 32]
+#           },
+#           "action_name": "ingress.ipv4_forward",
+#            "action_params": {
+#               "port": nodes[u]['adj'].index(v) + 1
+#            }
+#        })
 
     #print(hosts, [nodes['s4']['ip'], 24] )
 

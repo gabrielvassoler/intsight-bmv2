@@ -17,7 +17,7 @@ from scapy.all import bind_layers
 
 import vermon
 
-#VERMON START 
+#VERMON START
 #VARIABLES
 
 PROPERTIES = {}
@@ -220,9 +220,9 @@ def main(n_nodes=5, username=None):
     #VERMON START
     #CONFIG
     print('# VERMON -  Generating configuration variables for this verification    - #')
-    PROPERTIES, multiPathProperties, path_id_decoder = vermon.config()
+    PROPERTIES, multiPathProperties, path_id_decoder = vermon.config(PROPERTIES, multiPathProperties)
     #VERMON END
-    
+
     bind_layers(IP, IntSight_Report, proto=224)
     bind_layers(IP, Loop_Report, proto=225)
 
@@ -244,6 +244,7 @@ def main(n_nodes=5, username=None):
             # sys.stdout.flush()
             time.sleep(2)
     # print('IntSight Receiver: Bye')
+    vermon.final(PROPERTIES, multiPathProperties)
 
     if username is not None:
         os.system('chown -R {}: .'.format(username))
